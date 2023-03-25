@@ -144,6 +144,17 @@ namespace UuIiView
             GUILayout.Space(10f);
 
 
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Refresh", GUILayout.Width(wm)))
+            {
+                uiPanelData = null;
+                layerType = null;
+                supportSafeArea = null;
+                types = null;
+                EditorUtility.SetDirty(savedUIData);
+            }
+            EditorGUILayout.EndHorizontal();
+
             // ===== UIPanelDataの生成 =======================================================================
             if (uiPanelData == null)
             {
