@@ -40,13 +40,13 @@ namespace UuIiView
             warningStyle = new GUIStyle(GUI.skin.button);
             warningStyle.alignment = TextAnchor.MiddleLeft;
             warningStyle.fontStyle = FontStyle.Bold;
-            warningStyle.normal.textColor = Color.red;
+            warningStyle.normal.textColor = Color.yellow;
         }
         GUIStyle warningTextStyle;
         void WarningTextStyle()
         {
             warningTextStyle = new GUIStyle(GUI.skin.label);
-            warningTextStyle.normal.textColor = Color.red;
+            warningTextStyle.normal.textColor = Color.yellow;
         }
         GUIStyle buttonStyle;
         void ButtonStyle()
@@ -61,22 +61,6 @@ namespace UuIiView
 
         private void OnGUI()
         {
-            savedUIData = (UIPanelData)EditorGUILayout.ObjectField("UIPanelData", savedUIData, typeof(UIPanelData), true);
-
-            if (savedUIData == null)
-                return;
-
-            EditorGUI.BeginChangeCheck();
-
-            savedUIData.canvasRoot = (GameObject)EditorGUILayout.ObjectField("CanvasRoot", savedUIData.canvasRoot, typeof(GameObject), true );
-
-            if ( savedUIData)
-
-            GUILayout.Space(10f);
-            savedUIData.uiPanelPath = EditorGUILayout.TextField("UI Prefabs Path", savedUIData.uiPanelPath);
-            string resourceDir = savedUIData.uiPanelPath.Substring(0, savedUIData.uiPanelPath.IndexOf("/Resources/")+11); // ResourcesフォルダまでのPath("/Resources/"を含むために+11してる)
-            GUILayout.Space(10f);
-
             float wm = Screen.width * 0.2f;
             float wl = Screen.width * 0.4f;
             float ws = Screen.width * 0.12f;
@@ -86,6 +70,40 @@ namespace UuIiView
             if (warningStyle == null) WarningStyle();
             if (warningTextStyle == null) WarningTextStyle();
             if (buttonStyle == null) ButtonStyle();
+
+
+            savedUIData = (UIPanelData)EditorGUILayout.ObjectField("UIPanelData", savedUIData, typeof(UIPanelData), true);
+
+            if (savedUIData == null)
+            {
+                GUILayout.Space(10f);
+                GUILayout.Label("UIPanelData(ScriptableObject) を指定してください", warningStyle);
+                return;
+            }
+
+            EditorGUI.BeginChangeCheck();
+
+            savedUIData.canvasRoot = (GameObject)EditorGUILayout.ObjectField("CanvasRoot", savedUIData.canvasRoot, typeof(GameObject), true );
+
+            if (savedUIData.canvasRoot == null)
+            {
+                GUILayout.Space(10f);
+                GUILayout.Label("UIPanelData(ScriptableObject) に CanvasRoot(prefab) を指定してください", warningStyle);
+                return;
+            }
+
+            GUILayout.Space(10f);
+            savedUIData.uiPanelPath = EditorGUILayout.TextField("UI Prefabs Path", savedUIData.uiPanelPath);
+
+            if (string.IsNullOrEmpty(savedUIData.uiPanelPath))
+            {
+                GUILayout.Space(10f);
+                GUILayout.Label("UIPanelを保存するPathを指定してください", warningStyle);
+                return;
+            }
+
+            string resourceDir = savedUIData.uiPanelPath.Substring(0, savedUIData.uiPanelPath.IndexOf("/Resources/")+11); // ResourcesフォルダまでのPath("/Resources/"を含むために+11してる)
+            GUILayout.Space(10f);
 
             // ===== canvasRootの情報 =======================================================================
             if ( layerType == null || layerType.Length==0 || supportSafeArea == null || supportSafeArea.Length==0 )
