@@ -64,16 +64,33 @@ namespace UuIiView
             savedUIData = (UIPanelData)EditorGUILayout.ObjectField("UIPanelData", savedUIData, typeof(UIPanelData), true);
 
             if (savedUIData == null)
+            {
+                GUILayout.Space(10f);
+                GUILayout.Label("UIPanelData(ScriptableObject) を指定してください", warningStyle);
                 return;
+            }
 
             EditorGUI.BeginChangeCheck();
 
             savedUIData.canvasRoot = (GameObject)EditorGUILayout.ObjectField("CanvasRoot", savedUIData.canvasRoot, typeof(GameObject), true );
 
-            if ( savedUIData)
+            if (savedUIData.canvasRoot == null)
+            {
+                GUILayout.Space(10f);
+                GUILayout.Label("UIPanelData(ScriptableObject) に CanvasRoot(prefab) を指定してください", warningStyle);
+                return;
+            }
 
             GUILayout.Space(10f);
             savedUIData.uiPanelPath = EditorGUILayout.TextField("UI Prefabs Path", savedUIData.uiPanelPath);
+
+            if (string.IsNullOrEmpty(savedUIData.uiPanelPath))
+            {
+                GUILayout.Space(10f);
+                GUILayout.Label("UIPanelを保存するPathを指定してください", warningStyle);
+                return;
+            }
+
             string resourceDir = savedUIData.uiPanelPath.Substring(0, savedUIData.uiPanelPath.IndexOf("/Resources/")+11); // ResourcesフォルダまでのPath("/Resources/"を含むために+11してる)
             GUILayout.Space(10f);
 
