@@ -1,0 +1,266 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using System.IO;
+using System.Linq;
+using System;
+using System.Reflection;
+
+namespace UuIiView
+{
+    public class UIPanelDataSettings : EditorWindow
+    {
+        [MenuItem("Tools/UuIiView/UIPanelData Settings")]
+        static void ShowEditor()
+        {
+            var window = EditorWindow.GetWindow<UIPanelDataSettings>(typeof(SceneView));
+            Texture icon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Packages/UuIiView/Editor/Icons/icon.png");
+            window.titleContent = new GUIContent(" UIPanelData Settings", icon);
+        }
+
+        string[] layerType;
+        bool[] supportSafeArea;
+        List<PanelInfo> uiPanelData;
+        UIPanelData savedUIData;
+
+        GUIStyle normalStyle;
+        GUIStyle normalBoxStyle;
+        void DefaultStyle()
+        {
+            normalStyle = new GUIStyle(GUI.skin.label);
+            normalStyle.alignment = TextAnchor.MiddleCenter;
+            normalBoxStyle = new GUIStyle(GUI.skin.box);
+            normalBoxStyle.alignment = TextAnchor.MiddleCenter;
+            normalBoxStyle.normal.textColor = Color.white;
+            normalBoxStyle.active.textColor = Color.white;
+        }
+        GUIStyle warningStyle;
+        void WarningStyle()
+        {
+            warningStyle = new GUIStyle(GUI.skin.button);
+            warningStyle.alignment = TextAnchor.MiddleLeft;
+            warningStyle.fontStyle = FontStyle.Bold;
+            warningStyle.normal.textColor = Color.red;
+        }
+        GUIStyle warningTextStyle;
+        void WarningTextStyle()
+        {
+            warningTextStyle = new GUIStyle(GUI.skin.label);
+            warningTextStyle.normal.textColor = Color.red;
+        }
+        GUIStyle buttonStyle;
+        void ButtonStyle()
+        {
+            buttonStyle = new GUIStyle(GUI.skin.button);
+            buttonStyle.alignment = TextAnchor.MiddleLeft;
+        }
+
+        List<string> duplicatedFiles = new List<string>();
+
+        private Vector2 _scrollPosition = Vector2.zero;
+
+        private void OnGUI()
+        {
+            savedUIData = (UIPanelData)EditorGUILayout.ObjectField("UIPanelData", savedUIData, typeof(UIPanelData), true);
+
+            if (savedUIData == null)
+                return;
+
+            EditorGUI.BeginChangeCheck();
+
+            savedUIData.canvasRoot = (GameObject)EditorGUILayout.ObjectField("CanvasRoot", savedUIData.canvasRoot, typeof(GameObject), true );
+
+            if ( savedUIData)
+
+            GUILayout.Space(10f);
+            savedUIData.uiPanelPath = EditorGUILayout.TextField("UI Prefabs Path", savedUIData.uiPanelPath);
+            string resourceDir = savedUIData.uiPanelPath.Substring(0, savedUIData.uiPanelPath.IndexOf("/Resources/")+11); // ResourcesフォルダまでのPath("/Resources/"を含むために+11してる)
+            GUILayout.Space(10f);
+
+            float wm = Screen.width * 0.2f;
+            float wl = Screen.width * 0.4f;
+            float ws = Screen.width * 0.12f;
+            float wt = Screen.width * 0.05f;
+
+            if (normalStyle == null) DefaultStyle();
+            if (warningStyle == null) WarningStyle();
+            if (warningTextStyle == null) WarningTextStyle();
+            if (buttonStyle == null) ButtonStyle();
+
+            // ===== canvasRootの情報 =======================================================================
+            if ( layerType == null || layerType.Length==0 || supportSafeArea == null || supportSafeArea.Length==0 )
+            {
+                var layerRoots = savedUIData.canvasRoot.GetComponentsInChildren<Canvas>();
+                Dictionary<string, bool> dict = new Dictionary<string, bool>();
+                foreach ( var r in layerRoots )
+                {
+                    var sup = r.GetComponent<SafeAreaSupport>();
+                    dict[r.name] = (sup != null);
+                }
+
+                layerType = dict.Keys.ToArray();
+                supportSafeArea = dict.Values.ToArray();
+            }
+
+            // ===== Layerの情報 =======================================================================
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Box("Layer Name", normalBoxStyle, GUILayout.Width(wm));
+            GUILayout.Box("SafeArea", normalBoxStyle, GUILayout.Width(wm));
+            EditorGUILayout.EndHorizontal();
+
+            if (layerType == null || layerType.Length == 0 || supportSafeArea == null || supportSafeArea.Length == 0)
+            {
+                EditorGUILayout.LabelField("UIPanelData に CanvasRoot がセットされているか確認してください。", GUILayout.Width(Screen.width));
+            }
+            else
+            {
+                for (int i = 0; i < layerType.Length; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField(layerType[i], GUILayout.Width(wm));
+                    EditorGUILayout.LabelField(supportSafeArea[i] ? "o" : "-", normalStyle, GUILayout.Width(wm));
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+
+            GUILayout.Space(10f);
+
+
+            // ===== UIPanelDataの生成 =======================================================================
+            if (uiPanelData == null)
+            {
+                SetClassTypeBuf();
+
+                uiPanelData = new List<PanelInfo>();
+
+                string[] prefabs = Directory.GetFiles(savedUIData.uiPanelPath, "*.prefab", SearchOption.AllDirectories);
+
+                var files = new List<string>();
+                duplicatedFiles = new List<string>();
+                foreach (var prefab in prefabs)
+                {
+                    string panelName = Path.GetFileNameWithoutExtension(prefab);
+
+                    var panelInfo = new PanelInfo();
+                    var panel = savedUIData.panels.FirstOrDefault(_ => _.name == panelName);
+                    panelInfo.layerTypeIdx = panel == null ? 0 : panel.layerTypeIdx;
+                    panelInfo.blindType = panel == null ? BlindType.None : panel.blindType;
+                    panelInfo.cache = panel == null ? false : panel.cache;
+                    panelInfo.prefab = (GameObject)AssetDatabase.LoadAssetAtPath(prefab, typeof(GameObject));
+                    panelInfo.name = panelName;
+
+                    if (files.Any(_ => _ == panelName))
+                    {
+                        duplicatedFiles.Add(panelName);
+                    }
+
+                    uiPanelData.Add(panelInfo);
+                    files.Add(panelName);
+                }
+
+                savedUIData.panels = uiPanelData;
+            }
+
+            // ===== UIPanelの情報 =======================================================================
+            float stretchWidth = Screen.width - wm - ws - ws - wt - 40;// 40は右側に隙間を開けるmargin
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Box("UI Panel Name", normalBoxStyle, GUILayout.Width(wm));
+            GUILayout.Box("Path", normalBoxStyle, GUILayout.Width(stretchWidth));
+            GUILayout.Box("Layer", normalBoxStyle, GUILayout.Width(ws));
+            GUILayout.Box("Blind", normalBoxStyle, GUILayout.Width(ws));
+            GUILayout.Box("Cache", normalBoxStyle, GUILayout.Width(wt));
+            EditorGUILayout.EndHorizontal();
+
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+
+            // 変更チェック開始
+            //EditorGUI.BeginChangeCheck();
+
+            List<string> fileList = new List<string>();
+
+            foreach (var panel in savedUIData.panels)
+            {
+                EditorGUILayout.BeginHorizontal();
+                bool dup = duplicatedFiles.Any(_ => _ == panel.name);
+                if (dup)
+                {
+                    GUILayout.Label(panel.name, warningTextStyle, GUILayout.Width(wm));
+                }
+                else
+                {
+                    GUILayout.Label(panel.name, GUILayout.Width(wm));
+                }
+
+                string prefabPath = AssetDatabase.GetAssetPath(panel.prefab).Substring(savedUIData.uiPanelPath.Length);
+
+
+                if (dup)
+                {
+                    if (GUILayout.Button(prefabPath + " (duplicated filename)", warningStyle, GUILayout.Width(stretchWidth)))
+                    {
+                        OpenPrefab(panel.prefab);
+                    }
+                }
+                else
+                {
+                    if (GUILayout.Button(prefabPath, buttonStyle, GUILayout.Width(stretchWidth)))
+                    {
+                        OpenPrefab(panel.prefab);
+                    }
+                }
+                panel.layerTypeIdx = EditorGUILayout.Popup(panel.layerTypeIdx, layerType, GUILayout.Width(ws));
+                panel.blindType = (BlindType)EditorGUILayout.EnumPopup(panel.blindType ,GUILayout.Width(ws));
+                panel.cache = EditorGUILayout.Toggle(panel.cache, GUILayout.Width(wt));
+
+                EditorGUILayout.EndHorizontal();
+            }
+
+            EditorGUILayout.EndScrollView();
+
+            GUILayout.Space(20f);
+
+            // 変更チェック終了（変更があった場合は保存）
+            if ( EditorGUI.EndChangeCheck() )
+            {
+                EditorUtility.SetDirty(savedUIData);
+                AssetDatabase.SaveAssets();
+            }
+
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Refresh", GUILayout.Width(wm)))
+            {
+                uiPanelData = null;
+                layerType = null;
+                supportSafeArea = null;
+                types = null;
+                EditorUtility.SetDirty(savedUIData);
+            }
+            if (Event.current.type == UnityEngine.EventType.Repaint) buttonRect = GUILayoutUtility.GetLastRect();
+            EditorGUILayout.EndHorizontal();
+
+            GUILayout.Space(20f);
+        }
+
+        Rect buttonRect;
+
+        void OpenPrefab(GameObject prefab)
+        {
+            AssetDatabase.OpenAsset(prefab);
+        }
+
+        List<string> types;
+        public void SetClassTypeBuf()
+        {
+            types = new List<string>();
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (Type type in assembly.GetTypes())
+                {
+                    types.Add(type.Name);
+                }
+            }
+        }
+    }
+}

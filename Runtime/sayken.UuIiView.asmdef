@@ -1,0 +1,8 @@
+{
+    "name": "UuIiView",
+    "references": [
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}
