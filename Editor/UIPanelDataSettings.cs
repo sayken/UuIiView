@@ -93,7 +93,23 @@ namespace UuIiView
             }
 
             GUILayout.Space(10f);
-            savedUIData.uiPanelPath = EditorGUILayout.TextField("UI Prefabs Path", savedUIData.uiPanelPath);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.TextField("UI Prefabs Path", savedUIData.uiPanelPath);
+
+            if (GUILayout.Button("Folder", GUILayout.Width(wm)) )
+            {
+                string path = (string.IsNullOrEmpty(savedUIData.uiPanelPath)) ? Application.dataPath : savedUIData.uiPanelPath;
+                path = EditorUtility.OpenFolderPanel("UIPanel Path", path, "");
+
+                if ( !string.IsNullOrEmpty(path) )
+                {
+                    savedUIData.uiPanelPath = path.Replace(Application.dataPath, "Assets");
+                    Reset();
+                    EditorGUILayout.EndHorizontal();
+                    return;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
 
             if (string.IsNullOrEmpty(savedUIData.uiPanelPath))
             {
@@ -102,7 +118,6 @@ namespace UuIiView
                 return;
             }
 
-            string resourceDir = savedUIData.uiPanelPath.Substring(0, savedUIData.uiPanelPath.IndexOf("/Resources/")+11); // ResourcesフォルダまでのPath("/Resources/"を含むために+11してる)
             GUILayout.Space(10f);
 
             // ===== canvasRootの情報 =======================================================================
@@ -144,127 +159,118 @@ namespace UuIiView
             GUILayout.Space(10f);
 
 
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Refresh", GUILayout.Width(wm)))
+            try
             {
-                uiPanelData = null;
-                layerType = null;
-                supportSafeArea = null;
-                types = null;
-                EditorUtility.SetDirty(savedUIData);
-            }
-            EditorGUILayout.EndHorizontal();
-
-            // ===== UIPanelDataの生成 =======================================================================
-            if (uiPanelData == null)
-            {
-                SetClassTypeBuf();
-
-                uiPanelData = new List<PanelInfo>();
-
-                string[] prefabs = Directory.GetFiles(savedUIData.uiPanelPath, "*.prefab", SearchOption.AllDirectories);
-
-                var files = new List<string>();
-                duplicatedFiles = new List<string>();
-                foreach (var prefab in prefabs)
+                // ===== UIPanelDataの生成 =======================================================================
+                if (uiPanelData == null)
                 {
-                    string panelName = Path.GetFileNameWithoutExtension(prefab);
+                    SetClassTypeBuf();
 
-                    var panelInfo = new PanelInfo();
-                    var panel = savedUIData.panels.FirstOrDefault(_ => _.name == panelName);
-                    panelInfo.layerTypeIdx = panel == null ? 0 : panel.layerTypeIdx;
-                    panelInfo.blindType = panel == null ? BlindType.None : panel.blindType;
-                    panelInfo.cache = panel == null ? false : panel.cache;
-                    panelInfo.prefab = (GameObject)AssetDatabase.LoadAssetAtPath(prefab, typeof(GameObject));
-                    panelInfo.name = panelName;
+                    uiPanelData = new List<PanelInfo>();
 
-                    if (files.Any(_ => _ == panelName))
+                    string[] prefabs = Directory.GetFiles(savedUIData.uiPanelPath, "*.prefab", SearchOption.AllDirectories);
+
+                    var files = new List<string>();
+                    duplicatedFiles = new List<string>();
+                    foreach (var prefab in prefabs)
                     {
-                        duplicatedFiles.Add(panelName);
+                        string panelName = Path.GetFileNameWithoutExtension(prefab);
+
+                        var panelInfo = new PanelInfo();
+                        var panel = savedUIData.panels.FirstOrDefault(_ => _.name == panelName);
+                        panelInfo.layerTypeIdx = panel == null ? 0 : panel.layerTypeIdx;
+                        panelInfo.blindType = panel == null ? BlindType.None : panel.blindType;
+                        panelInfo.cache = panel == null ? false : panel.cache;
+                        panelInfo.prefab = (GameObject)AssetDatabase.LoadAssetAtPath(prefab, typeof(GameObject));
+                        panelInfo.name = panelName;
+
+                        if (files.Any(_ => _ == panelName))
+                        {
+                            duplicatedFiles.Add(panelName);
+                        }
+
+                        uiPanelData.Add(panelInfo);
+                        files.Add(panelName);
                     }
 
-                    uiPanelData.Add(panelInfo);
-                    files.Add(panelName);
+                    savedUIData.panels = uiPanelData;
                 }
 
-                savedUIData.panels = uiPanelData;
-            }
+                // ===== UIPanelの情報 =======================================================================
+                float stretchWidth = Screen.width - wm - ws - ws - wt - 40;// 40は右側に隙間を開けるmargin
 
-            // ===== UIPanelの情報 =======================================================================
-            float stretchWidth = Screen.width - wm - ws - ws - wt - 40;// 40は右側に隙間を開けるmargin
-
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Box("UI Panel Name", normalBoxStyle, GUILayout.Width(wm));
-            GUILayout.Box("Path", normalBoxStyle, GUILayout.Width(stretchWidth));
-            GUILayout.Box("Layer", normalBoxStyle, GUILayout.Width(ws));
-            GUILayout.Box("Blind", normalBoxStyle, GUILayout.Width(ws));
-            GUILayout.Box("Cache", normalBoxStyle, GUILayout.Width(wt));
-            EditorGUILayout.EndHorizontal();
-
-            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-
-            // 変更チェック開始
-            //EditorGUI.BeginChangeCheck();
-
-            List<string> fileList = new List<string>();
-
-            foreach (var panel in savedUIData.panels)
-            {
                 EditorGUILayout.BeginHorizontal();
-                bool dup = duplicatedFiles.Any(_ => _ == panel.name);
-                if (dup)
-                {
-                    GUILayout.Label(panel.name, warningTextStyle, GUILayout.Width(wm));
-                }
-                else
-                {
-                    GUILayout.Label(panel.name, GUILayout.Width(wm));
-                }
-
-                string prefabPath = AssetDatabase.GetAssetPath(panel.prefab).Substring(savedUIData.uiPanelPath.Length);
-
-
-                if (dup)
-                {
-                    if (GUILayout.Button(prefabPath + " (duplicated filename)", warningStyle, GUILayout.Width(stretchWidth)))
-                    {
-                        OpenPrefab(panel.prefab);
-                    }
-                }
-                else
-                {
-                    if (GUILayout.Button(prefabPath, buttonStyle, GUILayout.Width(stretchWidth)))
-                    {
-                        OpenPrefab(panel.prefab);
-                    }
-                }
-                panel.layerTypeIdx = EditorGUILayout.Popup(panel.layerTypeIdx, layerType, GUILayout.Width(ws));
-                panel.blindType = (BlindType)EditorGUILayout.EnumPopup(panel.blindType ,GUILayout.Width(ws));
-                panel.cache = EditorGUILayout.Toggle(panel.cache, GUILayout.Width(wt));
-
+                GUILayout.Box("UI Panel Name", normalBoxStyle, GUILayout.Width(wm));
+                GUILayout.Box("Path", normalBoxStyle, GUILayout.Width(stretchWidth));
+                GUILayout.Box("Layer", normalBoxStyle, GUILayout.Width(ws));
+                GUILayout.Box("Blind", normalBoxStyle, GUILayout.Width(ws));
+                GUILayout.Box("Cache", normalBoxStyle, GUILayout.Width(wt));
                 EditorGUILayout.EndHorizontal();
+
+                _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+
+                // 変更チェック開始
+                //EditorGUI.BeginChangeCheck();
+
+                List<string> fileList = new List<string>();
+
+                foreach (var panel in savedUIData.panels)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    bool dup = duplicatedFiles.Any(_ => _ == panel.name);
+                    if (dup)
+                    {
+                        GUILayout.Label(panel.name, warningTextStyle, GUILayout.Width(wm));
+                    }
+                    else
+                    {
+                        GUILayout.Label(panel.name, GUILayout.Width(wm));
+                    }
+
+                    string prefabPath = AssetDatabase.GetAssetPath(panel.prefab).Substring(savedUIData.uiPanelPath.Length);
+
+
+                    if (dup)
+                    {
+                        if (GUILayout.Button(prefabPath + " (duplicated filename)", warningStyle, GUILayout.Width(stretchWidth)))
+                        {
+                            OpenPrefab(panel.prefab);
+                        }
+                    }
+                    else
+                    {
+                        if (GUILayout.Button(prefabPath, buttonStyle, GUILayout.Width(stretchWidth)))
+                        {
+                            OpenPrefab(panel.prefab);
+                        }
+                    }
+                    panel.layerTypeIdx = EditorGUILayout.Popup(panel.layerTypeIdx, layerType, GUILayout.Width(ws));
+                    panel.blindType = (BlindType)EditorGUILayout.EnumPopup(panel.blindType, GUILayout.Width(ws));
+                    panel.cache = EditorGUILayout.Toggle(panel.cache, GUILayout.Width(wt));
+
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                EditorGUILayout.EndScrollView();
+
+                GUILayout.Space(20f);
+
+                // 変更チェック終了（変更があった場合は保存）
+                if (EditorGUI.EndChangeCheck())
+                {
+                    EditorUtility.SetDirty(savedUIData);
+                    AssetDatabase.SaveAssets();
+                }
             }
-
-            EditorGUILayout.EndScrollView();
-
-            GUILayout.Space(20f);
-
-            // 変更チェック終了（変更があった場合は保存）
-            if ( EditorGUI.EndChangeCheck() )
+            catch ( Exception e)
             {
-                EditorUtility.SetDirty(savedUIData);
-                AssetDatabase.SaveAssets();
+                Debug.LogError(e);
             }
-
 
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Refresh", GUILayout.Width(wm)))
             {
-                uiPanelData = null;
-                layerType = null;
-                supportSafeArea = null;
-                types = null;
-                EditorUtility.SetDirty(savedUIData);
+                Reset();
             }
             if (Event.current.type == UnityEngine.EventType.Repaint) buttonRect = GUILayoutUtility.GetLastRect();
             EditorGUILayout.EndHorizontal();
@@ -290,6 +296,15 @@ namespace UuIiView
                     types.Add(type.Name);
                 }
             }
+        }
+
+        public void Reset()
+        {
+            uiPanelData = null;
+            layerType = null;
+            supportSafeArea = null;
+            types = null;
+            EditorUtility.SetDirty(savedUIData);
         }
     }
 }
