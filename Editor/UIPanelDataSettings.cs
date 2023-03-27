@@ -14,7 +14,7 @@ namespace UuIiView
         static void ShowEditor()
         {
             var window = EditorWindow.GetWindow<UIPanelDataSettings>(typeof(SceneView));
-            Texture icon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Packages/UuIiView/Editor/Icons/icon.png");
+            Texture icon = AssetDatabase.LoadAssetAtPath<Texture>("/Packages/com.sayken.uuiiview/Editor/Icons/icon.png");
             window.titleContent = new GUIContent(" UIPanelData Settings", icon);
         }
 
