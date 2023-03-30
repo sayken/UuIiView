@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace UuIiView.Sample
 {
     public class SamplePresenter : UuIiView.UIBasePresenter
@@ -9,9 +5,10 @@ namespace UuIiView.Sample
         public void StartPanel()
         {
             var uiPanels = OpenGroup("Main");
-            Open("QuestList");
+            var questList = Open("QuestList");
             Open("QuestDetail");
 
+            //questList.UpdateData();
         }
 
     }

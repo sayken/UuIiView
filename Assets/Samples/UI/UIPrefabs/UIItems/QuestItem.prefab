@@ -31,7 +31,7 @@ RectTransform:
   - {fileID: 5699847200963159162}
   - {fileID: 2426436294680735380}
   m_Father: {fileID: 5773770848893890959}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 2426436294680735380}
   - component: {fileID: 2031098465544136907}
   - component: {fileID: 5274520355153754854}
+  - component: {fileID: 5018590162164202107}
   m_Layer: 5
   m_Name: QuestTitle
   m_TagString: Untagged
@@ -69,7 +70,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 286006736829044441}
-  m_RootOrder: -1
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -173,6 +174,25 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5018590162164202107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641057453014009093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4ded6c866844b6c8a8c8674245f03a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  formatType: 3
+  dateTimeFormat: 0
+  format: Quest {0}
+  useComma: 1
+  hasLimit: 0
+  max: 0
+  min: 0
 --- !u!1 &4429973927032627131
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +225,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 286006736829044441}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -281,6 +301,7 @@ GameObject:
   - component: {fileID: 5773770848893890959}
   - component: {fileID: 3397775517497186545}
   - component: {fileID: 1551781445454684923}
+  - component: {fileID: 4078330685725104827}
   m_Layer: 5
   m_Name: QuestItem
   m_TagString: Untagged
@@ -302,7 +323,7 @@ RectTransform:
   m_Children:
   - {fileID: 286006736829044441}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -324,7 +345,6 @@ MonoBehaviour:
   interactable: 0
   selected: 0
   disabled: 0
-  anim: {fileID: 0}
   tapArea: {fileID: 1479475771403580074}
 --- !u!114 &1551781445454684923
 MonoBehaviour:
@@ -338,3 +358,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99e6ec357ea834041aa2f7417c1ed3e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &4078330685725104827
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7122908558620311159}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e7496358dd63a43dd9b02b5ee157f8c9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

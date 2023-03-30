@@ -12,4 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d942dc5ab5d7b4cc486a8d4784c5f5b4, type: 3}
   m_Name: UIViewTest
   m_EditorClassIdentifier: UuIiView:UuIiView:ViewTestList
-  testDatas: []
+  testDatas:
+  - uiPanel: {fileID: 7781644401667040622, guid: 377bc690dee07411fa949eaa28e10042,
+      type: 3}
+    uiViewTestJsons:
+    - {fileID: 4900000, guid: 3b1c165c0cb324813a75ac9f0ad1d96b, type: 3}
+  - uiPanel: {fileID: 2761449679357952438, guid: 0d3aac51754e745538a6889014cedf1a,
+      type: 3}
+    uiViewTestJsons: []
+  - uiPanel: {fileID: 98412207566756897, guid: 193d938205743414b91eeb03d7dca4da, type: 3}
+    uiViewTestJsons: []
+  - uiPanel: {fileID: 7314607076877134764, guid: 07e3388c1ffd64b9fa5048c794ec123e,
+      type: 3}
+    uiViewTestJsons: []

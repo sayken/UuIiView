@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14447bcf198b45e89a6b990904d2e49, type: 3}
   m_Name: UIPanelData
   m_EditorClassIdentifier: 
-  uiPanelPath: Assets/Packages/UuIiView/Samples/Runtime/UI/UIPrefabs/UIPanels
+  uiPanelPath: Assets/Samples/UI/UIPrefabs/UIPanels
   canvasRoot: {fileID: 460352378409926990, guid: be3f3abd037334be2801d327b7cd3163,
     type: 3}
   panels:
