@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14447bcf198b45e89a6b990904d2e49, type: 3}
+  m_Name: UIPanelData
+  m_EditorClassIdentifier: 
+  uiPanelPath: Assets/Packages/UuIiView/Samples/Runtime/UI/UIPrefabs/UIPanels
+  canvasRoot: {fileID: 460352378409926990, guid: be3f3abd037334be2801d327b7cd3163,
+    type: 3}
+  panels:
+  - name: Footer
+    prefab: {fileID: 7314607076877134764, guid: 07e3388c1ffd64b9fa5048c794ec123e,
+      type: 3}
+    layerTypeIdx: 2
+    blindType: 0
+    cache: 0
+  - name: Header
+    prefab: {fileID: 98412207566756897, guid: 193d938205743414b91eeb03d7dca4da, type: 3}
+    layerTypeIdx: 2
+    blindType: 0
+    cache: 0
+  - name: QuestDetail
+    prefab: {fileID: 2761449679357952438, guid: 0d3aac51754e745538a6889014cedf1a,
+      type: 3}
+    layerTypeIdx: 0
+    blindType: 0
+    cache: 0
+  - name: QuestList
+    prefab: {fileID: 7781644401667040622, guid: 377bc690dee07411fa949eaa28e10042,
+      type: 3}
+    layerTypeIdx: 0
+    blindType: 0
+    cache: 0
