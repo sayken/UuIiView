@@ -12,7 +12,7 @@ namespace UuIiView
 
         static UIHierarchyCustom()
         {
-            icon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Packages/UuIiView/Editor/Icons/icon2.png");
+            icon = AssetDatabase.LoadAssetAtPath<Texture>("/Packages/com.sayken.uuiiview/Editor/Icons/icon2.png");
             EditorApplication.hierarchyWindowItemOnGUI += OnGUI;
         }
 
