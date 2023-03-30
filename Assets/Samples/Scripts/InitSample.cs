@@ -8,6 +8,7 @@ namespace UuIiView.Sample
     {
         [SerializeField] UIPanelData uiPanelData;
         [SerializeField] UIPanelGroup uiPanelGroup;
+        [SerializeField] TextAsset testData;
 
         private void Awake()
         {
@@ -18,6 +19,7 @@ namespace UuIiView.Sample
         {
             var samplePresenter = new SamplePresenter();
             samplePresenter.StartPanel();
+            samplePresenter.SetTestData(testData.text);
         }
     }
 }
