@@ -481,6 +481,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd6740170ee847d3a5038527fdbd1e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiPanelData: {fileID: 11400000, guid: dacf777c97b534e1c9c34d085fafdc23, type: 2}
+  uiPanelGroup: {fileID: 11400000, guid: e45c2e395289f4c018b4714d2c066001, type: 2}
   layerType: []
 --- !u!4 &1809128978
 Transform:
@@ -541,6 +543,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f43d5b314ec4ba388367705045fa79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPanelData: {fileID: 11400000, guid: dacf777c97b534e1c9c34d085fafdc23, type: 2}
-  uiPanelGroup: {fileID: 11400000, guid: e45c2e395289f4c018b4714d2c066001, type: 2}
   testData: {fileID: 4900000, guid: 3b1c165c0cb324813a75ac9f0ad1d96b, type: 3}
