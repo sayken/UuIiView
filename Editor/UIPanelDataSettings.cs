@@ -14,7 +14,7 @@ namespace UuIiView
         static void ShowEditor()
         {
             var window = EditorWindow.GetWindow<UIPanelDataSettings>(typeof(SceneView));
-            Texture icon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.sayken.uuiiview/Editor/Icons/icon.png");
+            Texture icon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Packages/UuIiView/Editor/Icons/icon.png");
             window.titleContent = new GUIContent(" UIPanelData Settings", icon);
         }
 
@@ -62,7 +62,7 @@ namespace UuIiView
         private void OnGUI()
         {
             float wm = Screen.width * 0.2f;
-            float wl = Screen.width * 0.4f;
+            float wl = Screen.width * 0.3f;
             float ws = Screen.width * 0.12f;
             float wt = Screen.width * 0.05f;
 
@@ -197,7 +197,7 @@ namespace UuIiView
                 }
 
                 // ===== UIPanelの情報 =======================================================================
-                float stretchWidth = Screen.width - wm - ws - ws - wt - 40;// 40は右側に隙間を開けるmargin
+                float stretchWidth = Screen.width - wm - ws - ws - wt - wt - 40;// 40は右側に隙間を開けるmargin
 
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Box("UI Panel Name", normalBoxStyle, GUILayout.Width(wm));
@@ -205,6 +205,7 @@ namespace UuIiView
                 GUILayout.Box("Layer", normalBoxStyle, GUILayout.Width(ws));
                 GUILayout.Box("Blind", normalBoxStyle, GUILayout.Width(ws));
                 GUILayout.Box("Cache", normalBoxStyle, GUILayout.Width(wt));
+                GUILayout.Box("Preview", normalBoxStyle, GUILayout.Width(wt));
                 EditorGUILayout.EndHorizontal();
 
                 _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
@@ -247,6 +248,31 @@ namespace UuIiView
                     panel.layerTypeIdx = EditorGUILayout.Popup(panel.layerTypeIdx, layerType, GUILayout.Width(ws));
                     panel.blindType = (BlindType)EditorGUILayout.EnumPopup(panel.blindType, GUILayout.Width(ws));
                     panel.cache = EditorGUILayout.Toggle(panel.cache, GUILayout.Width(wt));
+
+                    if (Application.isPlaying)
+                    {
+                        if (GUILayout.Button("Preview"))
+                        {
+                            var canvasRoot = GameObject.Find("CanvasRoot");
+                            if (canvasRoot != null)
+                            {
+                                var ts = canvasRoot.transform.GetComponentsInChildren<Transform>().FirstOrDefault(_ => _.name == panel.name);
+                                if (ts == null)
+                                {
+                                    UILayer.Inst.AddPanel(panel.name).Open(null);
+                                }
+                                else
+                                {
+                                    ts.GetComponent<UIPanel>().Close(true);
+                                }
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        GUILayout.Label("");
+                    }
 
                     EditorGUILayout.EndHorizontal();
                 }
@@ -304,10 +330,7 @@ namespace UuIiView
             layerType = null;
             supportSafeArea = null;
             types = null;
-            if ( savedUIData != null )
-            {
-                EditorUtility.SetDirty(savedUIData);
-            }
+            EditorUtility.SetDirty(savedUIData);
         }
     }
 }
