@@ -8,8 +8,8 @@ namespace UuIiView
 {
     public class UILayer : MonoBehaviour
     {
-        UIPanelData uiPanelData;
-        UIPanelGroup uiPanelGroup;
+        [SerializeField] UIPanelData uiPanelData;
+        [SerializeField] UIPanelGroup uiPanelGroup;
         public List<string> layerType = new List<string>();
         Dictionary<string, RectTransform> layerContent = new Dictionary<string, RectTransform>();
         GameObject canvasRoot;
@@ -20,11 +20,13 @@ namespace UuIiView
 
         Dictionary<string, UIPanel> panelCaches = new Dictionary<string, UIPanel>();
 
-        public void Initialize(UIPanelData uiPanelData, UIPanelGroup uiPanelGroup)
+        private void Awake()
         {
-            this.uiPanelData = uiPanelData;
-            this.uiPanelGroup = uiPanelGroup;
+            Initialize();
+        }
 
+        void Initialize()
+        {
             layerType.Clear();
             layerContent.Clear();
 
