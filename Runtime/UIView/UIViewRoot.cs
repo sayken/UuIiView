@@ -88,13 +88,13 @@ namespace UuIiView
             }
             if (d.GetType() == typeof(string))
             {
-                Log(d.ToString());
+                //Log(d.ToString());
                 var dic = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(d.ToString());
                 UpdateDataByDic(dic);
             }
             else if ( d.GetType() == typeof(Dictionary<string,object>))
             {
-                Log((Dictionary<string, object>)d);
+                //Log((Dictionary<string, object>)d);
                 UpdateDataByDic((Dictionary<string, object>)d);
             }
             else
@@ -110,7 +110,7 @@ namespace UuIiView
             var trans = gameObject.GetComponentsInChildren<RectTransform>(true);
 
             var infos = data.GetType().GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            Log(infos);
+            //Log(infos);
             foreach (Transform t in trans)
             {
                 var prop = infos.FirstOrDefault(_ => _.Name == t.gameObject.name);

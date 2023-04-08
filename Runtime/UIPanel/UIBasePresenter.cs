@@ -55,9 +55,7 @@ namespace UuIiView
         /// ========================================================================
         protected virtual void OnEvent(string commandLink)
         {
-            var command = new CommandLink(commandLink);
-            Debug.Log($"<color=cyan>[UuIiView] CommandLink {commandLink}\n{command.Log()}</color>");
-            OnEvent(command);
+            OnEvent(new CommandLink(commandLink));
         }
 
         protected virtual void OnEvent(CommandLink command)
@@ -101,7 +99,7 @@ namespace UuIiView
             if (paramStr.Length > 0)
                 paramStr = paramStr.Substring(1);
 
-            return ($"Id={Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : IsOn={IsOn} : param=({paramStr})");
+            return ($"<color=cyan>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : IsOn={IsOn} : param=({paramStr})</color>");
         }
     }
 }
