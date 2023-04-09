@@ -1,18 +1,19 @@
 using UnityEngine;
 using UniRx;
 using System;
+using System.Collections.Generic;
 
 namespace UuIiView.Sample
 {
     public static class AnimationExtentions
     {
-        static IDisposable playDisposable;
+        static Dictionary<string, IDisposable> playDisposables = new Dictionary<string, IDisposable>();
 
         public static Animation PlayClip(this Animation anim, string name)
         {
             if (anim.isPlaying)
             {
-                if (playDisposable != null) playDisposable.Dispose();
+                if (playDisposables.ContainsKey(name)) Dispose(name);
                 anim.Stop();
             }
 
@@ -23,9 +24,16 @@ namespace UuIiView.Sample
 
         public static void OnComplete(this Animation anim, Action<string> onCompleted, string name = "")
         {
-            if (playDisposable != null) playDisposable.Dispose();
+            if (playDisposables.ContainsKey(name)) Dispose(name);
+
             name = string.IsNullOrEmpty(name) ? anim.clip.name : name;
-            playDisposable = Observable.EveryUpdate().TakeWhile(_ => anim.IsPlaying(name)).Subscribe(_ => { }, () => { onCompleted?.Invoke(name); });
+            playDisposables[name] = Observable.EveryUpdate().TakeWhile(_ => anim.IsPlaying(name)).Subscribe(_ => { }, () => { onCompleted?.Invoke(name); Dispose(name); });
+        }
+
+        public static void Dispose(string name)
+        {
+            playDisposables[name].Dispose();
+            playDisposables.Remove(name);
         }
     }
 }
