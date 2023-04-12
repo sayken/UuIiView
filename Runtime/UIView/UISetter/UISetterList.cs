@@ -56,11 +56,12 @@ namespace UuIiView
 
         T ConvertData<T>(object obj)
         {
-            if ( obj.GetType() == typeof(string) )
+            if (obj.GetType() != typeof(string))
             {
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(obj.ToString());
+                obj = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
             }
-            return (T)obj;
+
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(obj.ToString());
         }
     }
 
