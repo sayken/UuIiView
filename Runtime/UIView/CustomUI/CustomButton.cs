@@ -7,7 +7,7 @@ using System;
 namespace UuIiView
 {
     [RequireComponent(typeof(Animator))]
-    public class CustomButton : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+    public class CustomButton : UIEvent, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
         [HideInInspector] public bool interactable;
         public bool Interactable

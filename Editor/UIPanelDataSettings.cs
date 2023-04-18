@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System;
 using System.Reflection;
+using System.Text;
 
 namespace UuIiView
 {
@@ -298,6 +299,10 @@ namespace UuIiView
             {
                 Reset();
             }
+            if ( GUILayout.Button("Make Enum", GUILayout.Width(wm)))
+            {
+                MakeEnum();
+            }
             if (Event.current.type == UnityEngine.EventType.Repaint) buttonRect = GUILayoutUtility.GetLastRect();
             EditorGUILayout.EndHorizontal();
 
@@ -332,5 +337,51 @@ namespace UuIiView
             types = null;
             EditorUtility.SetDirty(savedUIData);
         }
+
+        public void MakeEnum()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            // PanelNameのEnum作成
+            sb.AppendLine("public enum ePanelName\n{");
+            foreach ( string name in savedUIData.panels.Select(_ => _.name) )
+            {
+                sb.Append("\t").Append(name).AppendLine(",");
+            }
+            sb.AppendLine("}");
+
+            // EventButtonのEnum作成
+            List<string> buttonList = new List<string>();
+            sb.AppendLine();
+            sb.AppendLine("public enum eEventName\n{");
+            foreach (GameObject prefab in savedUIData.panels.Select(_ => _.prefab))
+            {
+                var buttons = prefab.GetComponentsInChildren<UIEvent>(true);
+                foreach ( var button in buttons )
+                {
+                    buttonList.Add(button.name);
+                }
+            }
+            foreach ( var name in buttonList.Distinct() )
+            {
+                sb.Append("\t").Append(name).AppendLine(",");
+            }
+            sb.AppendLine("}");
+
+            // ファイル書き出し
+            var path = EditorUtility.SaveFilePanel("Save Enum", "Assets", "UIEnum", "cs");
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                string enumCs = sb.ToString();
+                StreamWriter sw = new StreamWriter(path, false);
+                sw.WriteLine(enumCs);
+                sw.Flush();
+                sw.Close();
+                Debug.Log(enumCs);
+            }
+
+        }
+
     }
 }
