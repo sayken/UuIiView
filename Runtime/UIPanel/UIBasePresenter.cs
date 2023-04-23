@@ -23,28 +23,36 @@ namespace UuIiView
             }
             return ret;
         }
-        protected UIPanel Open(string name)
+        protected UIPanel Open(string name, Action onOpen = null)
         {
             uiPanelDic[name] = UILayer.Inst.AddPanel(name);
+            uiPanelDic[name].OnOpen = onOpen;
             return uiPanelDic[name].Open(OnEvent);
         }
 
-        protected void Close(string name)
+        protected void Close(string name, Action onClose = null)
         {
             var uiGroup = UILayer.Inst.GetPanelGroup(name);
             if (uiGroup != null)
             {
-                uiGroup.panelNames.ForEach(_ => ClosePanel(_));
+                //uiGroup.panelNames.ForEach(_ => ClosePanel(_, null));
+                bool first = true;
+                foreach ( var _ in uiGroup.panelNames )
+                {
+                    ClosePanel(_, (first?onClose:null));
+                    first = false;
+                }
             }
             else
             {
-                ClosePanel(name);
+                ClosePanel(name, onClose);
             }
         }
-        void ClosePanel(string panelName)
+        void ClosePanel(string panelName, Action onClose)
         {
             if (uiPanelDic.ContainsKey(panelName))
             {
+                uiPanelDic[panelName].OnClose = onClose;
                 uiPanelDic[panelName].Close();
                 uiPanelDic.Remove(panelName);
             }
