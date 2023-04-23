@@ -23,13 +23,13 @@ namespace UuIiView
             }
             return ret;
         }
-        protected UIPanel Open(string name)
+        protected UIPanel Open(string name, Action onCompleted=null)
         {
             uiPanelDic[name] = UILayer.Inst.AddPanel(name);
-            return uiPanelDic[name].Open(OnEvent);
+            return uiPanelDic[name].Open(OnEvent, onCompleted);
         }
 
-        protected void Close(string name)
+        protected void Close(string name, Action onCompleted = null)
         {
             var uiGroup = UILayer.Inst.GetPanelGroup(name);
             if (uiGroup != null)
@@ -38,14 +38,14 @@ namespace UuIiView
             }
             else
             {
-                ClosePanel(name);
+                ClosePanel(name, onCompleted);
             }
         }
-        void ClosePanel(string panelName)
+        void ClosePanel(string panelName, Action onCompleted = null)
         {
             if (uiPanelDic.ContainsKey(panelName))
             {
-                uiPanelDic[panelName].Close();
+                uiPanelDic[panelName].Close(onCompleted);
                 uiPanelDic.Remove(panelName);
             }
         }
