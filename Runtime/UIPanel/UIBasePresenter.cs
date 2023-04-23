@@ -29,7 +29,7 @@ namespace UuIiView
             return uiPanelDic[name].Open(null, OnEvent, onCompleted);
         }
 
-        protected void Close(string name, Action onCompleted = null)
+        protected void Close(string name, Action onCompleted)
         {
             var uiGroup = UILayer.Inst.GetPanelGroup(name);
             if (uiGroup != null)
