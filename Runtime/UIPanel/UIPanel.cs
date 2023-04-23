@@ -30,7 +30,7 @@ namespace UuIiView
             return this;
         }
 
-        public void Open(object d, Action<string> onEvent, Action onOpen)
+        public UIPanel Open(object d, Action<string> onEvent, Action onOpen)
         {
             isOpened = false;
 
@@ -49,6 +49,7 @@ namespace UuIiView
             {
                 OpenCompleted(onOpen);
             }
+            return this;
         }
 
         void OpenCompleted(Action onOpen)
