@@ -26,7 +26,7 @@ namespace UuIiView
         protected UIPanel Open(string name, Action onCompleted=null)
         {
             uiPanelDic[name] = UILayer.Inst.AddPanel(name);
-            return uiPanelDic[name].Open(OnEvent, onCompleted);
+            return uiPanelDic[name].Open(null, OnEvent, onCompleted);
         }
 
         protected void Close(string name, Action onCompleted = null)
@@ -45,7 +45,7 @@ namespace UuIiView
         {
             if (uiPanelDic.ContainsKey(panelName))
             {
-                uiPanelDic[panelName].Close(onCompleted);
+                uiPanelDic[panelName].Close(onCompleted, false);
                 uiPanelDic.Remove(panelName);
             }
         }
