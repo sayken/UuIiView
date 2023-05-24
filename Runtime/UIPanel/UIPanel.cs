@@ -10,27 +10,24 @@ namespace UuIiView
         public UIViewRoot vm => _vm ??= GetComponent<UIViewRoot>();
         ITransition transition;
 
+        public Action OnOpen;
+        public Action OnClose;
+
         public void SetTransition(ITransition transition) => this.transition = transition;
 
         public bool isOpened { get; private set; } = false;
 
         public UIPanel Open(object d)
         {
-            Open(d, null, null);
+            Open(d, null);
             return this;
         }
         public UIPanel Open(Action<string> onEvent)
         {
-            Open(null, onEvent, null);
+            Open(null, onEvent);
             return this;
         }
         public UIPanel Open(object d, Action<string> onEvent)
-        {
-            Open(d, onEvent, null);
-            return this;
-        }
-
-        public UIPanel Open(object d, Action<string> onEvent, Action onOpen)
         {
             isOpened = false;
 
@@ -43,11 +40,11 @@ namespace UuIiView
             transition = GetComponent<ITransition>();
             if (transition != null)
             {
-                transition.TransitionIn(() => OpenCompleted(onOpen));
+                transition.TransitionIn(() => OpenCompleted(this.OnOpen));
             }
             else
             {
-                OpenCompleted(onOpen);
+                OpenCompleted(OnOpen);
             }
             return this;
         }
@@ -61,26 +58,24 @@ namespace UuIiView
 
         public void UpdateData(object o) => vm.SetData(o);
 
-        public void Close(bool forceDestroy = false) => Close(null, forceDestroy);
-
-        public void Close(Action onClose, bool forceDestroy)
+        public void Close(bool forceDestroy = false)
         {
             UILayer.Inst.TapLock(true);
 
             //var transition = GetComponent<Transition>();
             if (transition != null)
             {
-                transition.TransitionOut( () => CloseCompleted(onClose, forceDestroy) );
+                transition.TransitionOut( () => CloseCompleted(forceDestroy) );
             }
             else
             {
-                CloseCompleted(onClose, forceDestroy);
+                CloseCompleted(forceDestroy);
             }
         }
 
-        void CloseCompleted(Action onClose, bool forceDestroy)
+        void CloseCompleted(bool forceDestroy)
         {
-            onClose?.Invoke();
+            OnClose?.Invoke();
             UILayer.Inst.TapLock(false);
 
             bool needDestroy = UILayer.Inst.Close(gameObject.name, forceDestroy);
