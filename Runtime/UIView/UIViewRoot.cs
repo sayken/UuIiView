@@ -17,6 +17,8 @@ namespace UuIiView
         CustomToggle,
         InputFieldValueChanged,
         InputFieldEndEdit,
+        Open,
+        Close,
     }
 
     public class UIViewRoot : MonoBehaviour

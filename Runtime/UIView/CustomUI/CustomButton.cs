@@ -9,6 +9,7 @@ namespace UuIiView
     [RequireComponent(typeof(Animator))]
     public class CustomButton : UIEvent, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
+        [SerializeField] public EventType eventType;
         [HideInInspector] public bool interactable;
         public bool Interactable
         {
@@ -87,7 +88,7 @@ namespace UuIiView
                 viewRoot = gameObject.GetComponentInParent<UIViewRoot>();
             }
 
-            onClickEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.CustomButton);
+            onClickEvent = () => viewRoot.ViewEvent(gameObject.name, eventType);
             onLongTapEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.CustomLongTap);
         }
         void Start()
