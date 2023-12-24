@@ -1,75 +1,58 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UuIiView;
 
-namespace UuIiView
+[RequireComponent(typeof(ScrollRect))]
+public class UISetterList : UISetter
 {
-    [RequireComponent(typeof(ScrollRect))]
-    public class UISetterList : UISetter
+    [SerializeField] private UIPanel uiPanelRoot;
+    [SerializeField] private UIViewRoot cellPrefab;
+    [SerializeField] string itemName;
+
+    List<UIViewRoot> itemCells = new List<UIViewRoot>();
+
+    public override void Set(object obj)
     {
-        [SerializeField] private UIPanel uiPanelRoot;
-        [SerializeField] private UIViewRoot cellPrefab;
-        [SerializeField] string itemName;
-
-        List<UIViewRoot> itemCells = new List<UIViewRoot>();
-
-        public override void Set(object obj)
+        var dataList = (IList)obj;
+        if (obj.GetType() == typeof(Newtonsoft.Json.Linq.JArray))
         {
-            var data = ConvertData<UIListData>(obj);
-            SetList(data.Datas);
-        }
-
-        /// <summary>
-        /// リストデータを生成して初期化
-        /// </summary>
-        /// <param name="obj">各要素のJsonのList</param>
-        public virtual void SetList(IList obj)
-        {
-            var listRoot = GetComponent<ScrollRect>().content;
-
-            for (int i = 0; i < obj.Count; i++)
+            dataList = new List<object>();
+            foreach (var o in (IList)obj)
             {
-                var data = ConvertData<Dictionary<string, object>>(obj[i]);
-
-                if (itemCells.Count > i)
-                {
-                    // 既にitemCellsにデータがあるので流用
-                    itemCells[i].Init(uiPanelRoot, data);
-                }
-                else
-                {
-                    // itemCellsにデータが無い（or 足りない）ので追加
-                    var vm = Instantiate(cellPrefab, listRoot);
-                    if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
-                    vm.Init(uiPanelRoot, data);
-                    itemCells.Add(vm);
-                }
-            }
-
-            // 必要なitemCellだけ表示状態にする
-            for (int i = 0; i < itemCells.Count; i++)
-            {
-                itemCells[i].gameObject.SetActive(obj.Count > i);
+                var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(o.ToString());
+                dataList.Add(d);
             }
         }
 
-        T ConvertData<T>(object obj)
+        var listRoot = GetComponent<ScrollRect>().content;
+        bool isAdd = true;
+
+        if (isAdd)
         {
-            if (obj.GetType() != typeof(string))
+            foreach (var data in dataList)
             {
-                obj = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                var vm = Instantiate(cellPrefab, listRoot);
+                if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
+                vm.Init(uiPanelRoot, data);
+                itemCells.Add(vm);
             }
-
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(obj.ToString());
         }
-    }
-
-    public class UIListData
-    {
-        // List表示に必要なパラメータなど
-        public Dictionary<string,object> Info;
-        // Listの実データ
-        public IList Datas;
+        else
+        {
+            for (int i = itemCells.Count; i < dataList.Count; i++)
+            {
+                var vm = Instantiate(cellPrefab, listRoot);
+                if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
+                itemCells.Add(vm);
+            }
+            int cnt = 0;
+            foreach (var data in dataList)
+            {
+                itemCells[cnt].Init(uiPanelRoot, data);
+                cnt++;
+            }
+        }
     }
 }
