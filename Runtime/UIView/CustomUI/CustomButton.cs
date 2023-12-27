@@ -11,6 +11,20 @@ namespace UuIiView
     {
         [SerializeField] public EventType eventType;
         [HideInInspector] public bool interactable;
+
+        [HideInInspector] public string targetPanelName = string.Empty;
+        public string TargetPanelName
+        {
+            get
+            {
+                return targetPanelName;
+            }
+            set
+            {
+                targetPanelName = value;
+            }
+        }
+
         public bool Interactable
         {
             get
@@ -23,7 +37,7 @@ namespace UuIiView
                 tapArea.raycastTarget = value;
             }
         }
-        public bool selected;
+        [HideInInspector] public bool selected;
         public bool Selected
         {
             get
@@ -37,7 +51,7 @@ namespace UuIiView
             }
         }
 
-        public bool disabled;
+        [HideInInspector] public bool disabled;
         public bool Disabled
         {
             get
@@ -88,7 +102,17 @@ namespace UuIiView
                 viewRoot = gameObject.GetComponentInParent<UIViewRoot>();
             }
 
-            onClickEvent = () => viewRoot.ViewEvent(gameObject.name, eventType);
+            onClickEvent = () =>
+            {
+                if (eventType == EventType.Open || !string.IsNullOrEmpty(targetPanelName))
+                {
+                    viewRoot.ViewEvent(targetPanelName, gameObject.name, eventType);
+                }
+                else
+                {
+                    viewRoot.ViewEvent(gameObject.name, eventType);
+                }
+            };
             onLongTapEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.CustomLongTap);
         }
         void Start()

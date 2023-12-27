@@ -27,11 +27,12 @@ namespace UuIiView
         private UIPanel rootPanel;
         public Action<string> OnEvent { get; private set; }
 
-        public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel, btn.name, EventType.Button, data, true);
-        public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel, tgl.name, EventType.Toggle, data, tgl.isOn);
+        public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel.gameObject.name, btn.name, EventType.Button, data, true);
+        public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel.gameObject.name, tgl.name, EventType.Toggle, data, tgl.isOn);
 
-        public void ViewEvent(string name, EventType type, bool isOn = true) => ReceiveEvent(rootPanel, name, type, data, isOn);
-        public void InputEvent(string name, EventType type, string data) => ReceiveEvent(rootPanel, name, type, data, true);
+        public void ViewEvent(string targetPanelName, string name, EventType type, bool isOn = true) => ReceiveEvent(targetPanelName, name, type, data, isOn);
+        public void ViewEvent(string name, EventType type, bool isOn = true) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, isOn);
+        public void InputEvent(string name, EventType type, string data) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, true);
 
         // 初期化
         public void Init(object d, Action<string> onEvent) => Init(null, d, onEvent);
@@ -43,9 +44,9 @@ namespace UuIiView
         }
 
         // イベントを受け取ってCommandLinkに変換
-        public void ReceiveEvent(UIPanel uiPanel, string name, EventType type, object data, bool isOn)
+        public void ReceiveEvent(string panelName, string name, EventType type, object data, bool isOn)
         {
-            string commandLink = uiPanel.gameObject.name + "/" + name + "/" + type.ToString() + "/" + isOn;
+            string commandLink = panelName + "/" + name + "/" + type.ToString() + "/" + isOn;
             if (data != null)
             {
                 if (type == EventType.InputFieldValueChanged || type == EventType.InputFieldEndEdit )

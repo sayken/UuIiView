@@ -10,7 +10,8 @@ namespace UuIiView
             Add(
                 nameof(CustomButton.interactable),
                 nameof(CustomButton.selected),
-                nameof(CustomButton.disabled)
+                nameof(CustomButton.disabled),
+                nameof(CustomButton.targetPanelName)
             );
         }
 
@@ -21,6 +22,13 @@ namespace UuIiView
             DrawDefaultInspector();
 
             serializedObject.Update();
+            if ( ts.eventType == EventType.Open )
+            {
+                prop["targetPanelName"].stringValue = EditorGUILayout.TextField("Target Panel Name", prop["targetPanelName"].stringValue);
+            }
+
+            EditorGUILayout.Space();
+
             prop["interactable"].boolValue = EditorGUILayout.Toggle("interactable", prop["interactable"].boolValue);
             bool modified = serializedObject.hasModifiedProperties;
             serializedObject.ApplyModifiedProperties();
@@ -33,6 +41,7 @@ namespace UuIiView
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.Toggle("selected", prop["selected"].boolValue);
             EditorGUILayout.Toggle("disabled", prop["disabled"].boolValue);
+            EditorGUILayout.LabelField("Target Panel Name", (ts.eventType == EventType.Open) ? prop["targetPanelName"].stringValue : ts.gameObject.name);
             EditorGUI.EndDisabledGroup();
 
         }
