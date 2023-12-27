@@ -8,7 +8,14 @@ namespace UuIiView
 {
     public class UIBasePresenter
     {
+        IDispatcher dispatcher;
+
         protected Dictionary<string, UIPanel> uiPanelDic = new Dictionary<string, UIPanel>();
+
+        public UIBasePresenter(IDispatcher dispatcher)
+        {
+            this.dispatcher = dispatcher;
+        }
 
         /// ========================================================================
         /// Open
@@ -27,7 +34,7 @@ namespace UuIiView
         {
             uiPanelDic[name] = UILayer.Inst.AddPanel(name);
             uiPanelDic[name].OnOpen = onOpen;
-            return uiPanelDic[name].Open(OnEvent);
+            return uiPanelDic[name].Open(PassToDispatcher);
         }
 
         protected void Close(string name, Action onClose = null)
@@ -57,6 +64,8 @@ namespace UuIiView
                 uiPanelDic.Remove(panelName);
             }
         }
+
+        void PassToDispatcher(string path) => dispatcher.Dispatch(new CommandLink(path));
 
         /// ========================================================================
         /// Event
