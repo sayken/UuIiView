@@ -70,12 +70,12 @@ namespace UuIiView
         /// ========================================================================
         /// Event
         /// ========================================================================
-        protected virtual void OnEvent(string commandLink)
+        public virtual void OnEvent(string commandLink)
         {
             OnEvent(new CommandLink(commandLink));
         }
 
-        protected virtual void OnEvent(CommandLink command)
+        public virtual void OnEvent(CommandLink command)
         {
 
         }
