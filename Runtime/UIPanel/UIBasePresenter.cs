@@ -65,9 +65,9 @@ namespace UuIiView
             }
         }
 
-        void PassToDispatcher(string path) => PathToDispatcher(new CommandLink(path));
+        void PassToDispatcher(string path) => PassToDispatcher(new CommandLink(path));
 
-        protected void PathToDispatcher(CommandLink cmd) => dispatcher.Dispatch(cmd);
+        protected void PassToDispatcher(CommandLink cmd) => dispatcher.Dispatch(cmd);
 
         /// ========================================================================
         /// Event
