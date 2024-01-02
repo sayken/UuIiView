@@ -10,6 +10,7 @@ public class UISetterList : UISetter
     [SerializeField] private UIPanel uiPanelRoot;
     [SerializeField] private UIViewRoot cellPrefab;
     [SerializeField] string itemName;
+    [SerializeField] bool isAdd = false;
 
     List<UIViewRoot> itemCells = new List<UIViewRoot>();
 
@@ -27,7 +28,6 @@ public class UISetterList : UISetter
         }
 
         var listRoot = GetComponent<ScrollRect>().content;
-        bool isAdd = true;
 
         if (isAdd)
         {
@@ -47,11 +47,17 @@ public class UISetterList : UISetter
                 if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
                 itemCells.Add(vm);
             }
-            int cnt = 0;
-            foreach (var data in dataList)
+            for( int i=0 ; i<itemCells.Count ; i++ )
             {
-                itemCells[cnt].Init(uiPanelRoot, data);
-                cnt++;
+                if (dataList.Count > i)
+                {
+                    itemCells[i].Init(uiPanelRoot, dataList[i]);
+                    itemCells[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    itemCells[i].gameObject.SetActive(false);
+                }
             }
         }
     }
