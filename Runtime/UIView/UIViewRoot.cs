@@ -19,6 +19,7 @@ namespace UuIiView
         InputFieldEndEdit,
         Open,
         Close,
+        Slider,
     }
 
     public class UIViewRoot : MonoBehaviour
@@ -29,6 +30,7 @@ namespace UuIiView
 
         public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel.gameObject.name, btn.name, EventType.Button, data, true);
         public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel.gameObject.name, tgl.name, EventType.Toggle, data, tgl.isOn);
+        public void SliderEvent(Slider slider) =>        ReceiveEvent(rootPanel.gameObject.name, slider.name, EventType.Slider, slider.value, true);
 
         public void ViewEvent(string targetPanelName, string name, EventType type, bool isOn = true) => ReceiveEvent(targetPanelName, name, type, data, isOn);
         public void ViewEvent(string name, EventType type, bool isOn = true) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, isOn);
@@ -52,6 +54,10 @@ namespace UuIiView
                 if (type == EventType.InputFieldValueChanged || type == EventType.InputFieldEndEdit )
                 {
                     commandLink += "//Input=" + data.ToString();
+                }
+                else if ( type == EventType.Slider )
+                {
+                    commandLink += "//Slider=" + data.ToString();
                 }
                 else
                 {
