@@ -104,9 +104,13 @@ namespace UuIiView
 
             onClickEvent = () =>
             {
-                if (eventType == EventType.Open || !string.IsNullOrEmpty(targetPanelName))
+                if ((eventType == EventType.Open || eventType == EventType.CloseAndOpen) && !string.IsNullOrEmpty(targetPanelName))
                 {
-                    viewRoot.ViewEvent(targetPanelName, gameObject.name, eventType);
+                    if ( eventType == EventType.CloseAndOpen )
+                    {
+                        viewRoot.ViewEvent(gameObject.name, EventType.Close);
+                    }
+                    viewRoot.ViewEvent(targetPanelName, gameObject.name, EventType.Open);
                 }
                 else
                 {

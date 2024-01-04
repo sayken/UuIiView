@@ -22,7 +22,7 @@ namespace UuIiView
             DrawDefaultInspector();
 
             serializedObject.Update();
-            if ( ts.eventType == EventType.Open )
+            if ( ts.eventType == EventType.Open || ts.eventType == EventType.CloseAndOpen)
             {
                 prop["targetPanelName"].stringValue = EditorGUILayout.TextField("Target Panel Name", prop["targetPanelName"].stringValue);
             }

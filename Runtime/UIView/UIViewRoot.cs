@@ -20,6 +20,7 @@ namespace UuIiView
         Open,
         Close,
         Slider,
+        CloseAndOpen
     }
 
     public class UIViewRoot : MonoBehaviour
