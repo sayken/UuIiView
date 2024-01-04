@@ -20,7 +20,8 @@ namespace UuIiView
         Button,
         Toggle,
         Slider,
-        List
+        List,
+        TMP_InputField
     }
 
     public class UISetterSimple : UISetter
@@ -53,6 +54,8 @@ namespace UuIiView
                 t = UIType.Slider;
             else if (GetComponent<ScrollRect>() != null)
                 t = UIType.List;
+            else if (GetComponent<TMP_InputField>() != null)
+                t = UIType.TMP_InputField;
             else
                 t = UIType.GameObject;
 
@@ -96,6 +99,9 @@ namespace UuIiView
                     break;
                 case UIType.List:
                     SetList(obj);
+                    break;
+                case UIType.TMP_InputField:
+                    GetComponent<TMP_InputField>().text = obj.ToString();
                     break;
                 case UIType.GameObject:
                     gameObject.SetActive((bool)obj);
