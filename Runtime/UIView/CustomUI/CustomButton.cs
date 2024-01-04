@@ -100,7 +100,7 @@ namespace UuIiView
         Coroutine longtap;
         bool isLongTap = false;
 
-        List<string> containsParam = new List<string>();
+        protected List<string> containsParam = new List<string>();
 
         void Awake()
         {

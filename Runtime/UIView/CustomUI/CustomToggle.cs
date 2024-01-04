@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 
 namespace UuIiView
 {
@@ -47,6 +48,11 @@ namespace UuIiView
                 };
             }
             onLongTapEvent = () => { };
+
+            if (Anim != null)
+            {
+                containsParam = Anim.parameters.Select(_ => _.name).ToList();
+            }
         }
     }
 }
