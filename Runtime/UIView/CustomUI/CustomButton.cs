@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 
 namespace UuIiView
 {
@@ -87,12 +89,18 @@ namespace UuIiView
             get
             {
                 anim ??= GetComponent<Animator>();
+                if ( anim == null || anim.runtimeAnimatorController == null )
+                {
+                    return null;
+                }
                 return anim;
             }
         }
 
         Coroutine longtap;
         bool isLongTap = false;
+
+        List<string> containsParam = new List<string>();
 
         void Awake()
         {
@@ -118,6 +126,11 @@ namespace UuIiView
                 }
             };
             onLongTapEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.CustomLongTap);
+
+            if (Anim != null )
+            {
+                containsParam = Anim.parameters.Select(_ => _.name).ToList();
+            }
         }
         void Start()
         {
@@ -176,7 +189,7 @@ namespace UuIiView
 
         void PlayAnim(string animName, bool flag)
         {
-            if (Anim != null)
+            if (Anim != null && containsParam.Contains(animName) )
             {
                 Anim.SetBool(animName, flag);
             }
