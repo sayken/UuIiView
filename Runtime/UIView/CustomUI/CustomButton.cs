@@ -35,9 +35,18 @@ namespace UuIiView
             }
             set
             {
-                interactable = value;
-                tapArea.raycastTarget = value;
+                SetInteractable(value);
+
+                if ( InteractableWithDisable )
+                {
+                    SetDisabled(!value);
+                }
             }
+        }
+        void SetInteractable(bool value)
+        {
+            interactable = value;
+            tapArea.raycastTarget = value;
         }
         [HideInInspector] public bool selected;
         public bool Selected
@@ -62,19 +71,20 @@ namespace UuIiView
             }
             set
             {
-                disabled = value;
-                OnDisabled();
-            }
-        }
+                SetDisabled(value);
 
-        public bool InteractableWith
-        {
-            set
-            {
-                Interactable = value;
-                Disabled = value;
+                if ( InteractableWithDisable )
+                {
+                    SetInteractable(!value);
+                }
             }
         }
+        void SetDisabled(bool value)
+        {
+            disabled = value;
+            OnDisabled();
+        }
+        [SerializeField] bool InteractableWithDisable = true;
 
         [SerializeField] Image tapArea;
 

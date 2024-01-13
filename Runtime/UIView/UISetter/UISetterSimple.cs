@@ -80,7 +80,7 @@ namespace UuIiView
                     StartCoroutine(SetTexture(obj.ToString()));
                     break;
                 case UIType.CustomButton:
-                    GetComponent<CustomButton>().interactable = (bool)obj;
+                    GetComponent<CustomButton>().Interactable = (bool)obj;
                     break;
                 case UIType.CustomToggle:
                     GetComponent<CustomToggle>().IsOn = (bool)obj;
