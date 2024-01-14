@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ namespace UuIiView
             "yyyy-MM-dd",
             "yyyy-MM-dd HH:mm",
             "yyyy-MM-dd HH:mm:ss",
+            "HH:mm",
+            "mm:ss",
         };
 
 
@@ -31,28 +34,56 @@ namespace UuIiView
         public bool hasLimit = false;
         public int max;
         public int min;
-        private TextMeshProUGUI text;
+        private TextMeshProUGUI textUI;
 
 
         public override void Set(object obj)
         {
-            if (text == null) text = GetComponent<TextMeshProUGUI>();
+            if (textUI == null) textUI = GetComponent<TextMeshProUGUI>();
+
+            string textStr = string.Empty;
+            Color color = Color.white;
+
+            if ( obj.ToString().StartsWith("{") )
+            {
+                // 2つ以上のパラメータがある
+                var dict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(obj.ToString());
+
+                if (ColorUtility.TryParseHtmlString(dict["color"], out color))
+                {
+                    textUI.color = color;
+                }
+                if (dict.ContainsKey("text"))
+                {
+                    textStr = dict["text"];
+                }
+            }
+            else
+            {
+                // テキスト
+                textStr = obj.ToString();
+            }
 
 
             if (formatType == FormatType.None)
             {
-                text.text = obj.ToString();
+                textUI.text = textStr;
             }
             else if (formatType == FormatType.DateTime)
             {
                 if (obj.GetType() == typeof(DateTime))
                 {
-                    text.text = string.Format(dateFormat[dateTimeFormat], obj.ToString());
+                    textUI.text = string.Format(dateFormat[dateTimeFormat], obj.ToString());
+                }
+                else if ( obj.GetType() == typeof(long) )
+                {
+                    var datetime = new DateTime((long)obj);
+                    textUI.text = datetime.ToString(dateFormat[dateTimeFormat]);
                 }
             }
             else if (formatType == FormatType.Numeric)
             {
-                if (int.TryParse(obj.ToString(), out int val))
+                if (int.TryParse(textStr, out int val))
                 {
                     // 表示上限、表示下限があるかどうか
                     if (hasLimit)
@@ -63,23 +94,23 @@ namespace UuIiView
                     // カンマ区切りにするかどうか
                     if (useComma)
                     {
-                        text.text = string.Format("{0:#,0}", val);
+                        textUI.text = string.Format("{0:#,0}", val);
                     }
                     else
                     {
-                        text.text = val.ToString();
+                        textUI.text = val.ToString();
                     }
 
                     // 最後にフォーマットがあれば、それを使う
                     if ( !string.IsNullOrEmpty(format) )
                     {
-                        text.text = string.Format(format, text.text);
+                        textUI.text = string.Format(format, textUI.text);
                     }
                 }
             }
             else if (formatType == FormatType.Custom)
             {
-                text.text = string.Format(format, obj.ToString());
+                textUI.text = string.Format(format, textStr);
             }
         }
 
