@@ -142,7 +142,7 @@ namespace UuIiView
                 containsParam = Anim.parameters.Select(_ => _.name).ToList();
             }
         }
-        void Start()
+        void OnEnable()
         {
             OnSelected();
             OnDisabled();
