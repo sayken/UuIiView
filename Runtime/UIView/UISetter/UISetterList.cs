@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UuIiView;
 
-[RequireComponent(typeof(ScrollRect))]
 public class UISetterList : UISetter
 {
-    [SerializeField] private UIPanel uiPanelRoot;
+    private UIPanel uiPanelRoot;
     [SerializeField] private UIViewRoot cellPrefab;
+    [SerializeField] private Transform listRoot;
     [SerializeField] string itemName;
-    [SerializeField] bool isAdd = false;
 
     List<UIViewRoot> itemCells = new List<UIViewRoot>();
 
@@ -27,37 +26,24 @@ public class UISetterList : UISetter
             }
         }
 
-        var listRoot = GetComponent<ScrollRect>().content;
+        uiPanelRoot = GetComponentInParent<UIPanel>();
 
-        if (isAdd)
+        for (int i = itemCells.Count; i < dataList.Count; i++)
         {
-            foreach (var data in dataList)
-            {
-                var vm = Instantiate(cellPrefab, listRoot);
-                if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
-                vm.Init(uiPanelRoot, data);
-                itemCells.Add(vm);
-            }
+            var vm = Instantiate(cellPrefab, listRoot);
+            if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
+            itemCells.Add(vm);
         }
-        else
+        for( int i=0 ; i<itemCells.Count ; i++ )
         {
-            for (int i = itemCells.Count; i < dataList.Count; i++)
+            if (dataList.Count > i)
             {
-                var vm = Instantiate(cellPrefab, listRoot);
-                if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
-                itemCells.Add(vm);
+                itemCells[i].Init(uiPanelRoot, dataList[i]);
+                itemCells[i].gameObject.SetActive(true);
             }
-            for( int i=0 ; i<itemCells.Count ; i++ )
+            else
             {
-                if (dataList.Count > i)
-                {
-                    itemCells[i].Init(uiPanelRoot, dataList[i]);
-                    itemCells[i].gameObject.SetActive(true);
-                }
-                else
-                {
-                    itemCells[i].gameObject.SetActive(false);
-                }
+                itemCells[i].gameObject.SetActive(false);
             }
         }
     }
