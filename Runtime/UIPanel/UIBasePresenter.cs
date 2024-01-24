@@ -6,7 +6,7 @@ using System;
 
 namespace UuIiView
 {
-    public class UIBasePresenter
+    public class UIBasePresenter : IPresenter
     {
         IDispatcher dispatcher;
 
