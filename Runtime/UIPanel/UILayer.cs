@@ -20,9 +20,13 @@ namespace UuIiView
 
         Dictionary<string, UIPanel> panelCaches = new Dictionary<string, UIPanel>();
 
+        public IDispatcher Dispatcher;
+
         private void Awake()
         {
             Initialize();
+
+            Dispatcher = GetComponent<IDispatcher>();
         }
 
         void Initialize()
@@ -155,6 +159,24 @@ namespace UuIiView
                 return false;
             }
             return true;
+        }
+
+        public void CloseByLayer(params string[] layerNames)
+        {
+            StartCoroutine(_CloseByLayer(layerNames));
+        }
+
+        public IEnumerator _CloseByLayer(params string[] layerNames)
+        {
+            yield return null;
+            foreach ( var layerName in layerNames )
+            {
+                var panels = layerContent[layerName].GetComponentsInChildren<UIPanel>(true);
+                foreach ( var panel in panels)
+                {
+                    panel.Close();
+                }
+            }
         }
 
         public bool IsTapLock => tapLock.activeSelf;
