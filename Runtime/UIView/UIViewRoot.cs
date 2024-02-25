@@ -26,6 +26,16 @@ namespace UuIiView
     public class UIViewRoot : MonoBehaviour
     {
         private object data;
+        private List<UISetter> uiSetters;
+        private List<UISetter> UISetters
+        {
+            get
+            {
+                uiSetters ??= gameObject.GetComponentsInChildren<UISetter>(true).ToList();
+                return uiSetters;
+            }
+        }
+
         private UIPanel rootPanel;
         public Action<string> OnEvent { get; private set; }
 
@@ -117,41 +127,39 @@ namespace UuIiView
         void UpdateDataByProto(object d)
         {
             data = d;
-            var trans = gameObject.GetComponentsInChildren<RectTransform>(true);
 
             var infos = data.GetType().GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             //Log(infos);
-            foreach (Transform t in trans)
+            foreach (UISetter u in UISetters)
             {
-                var prop = infos.FirstOrDefault(_ => _.Name == t.gameObject.name);
+                var prop = infos.FirstOrDefault(_ => _.Name == u.gameObject.name);
                 if (prop == null) continue;
-                SetObj(t, prop.GetValue(data));
+                SetObj(u, prop.GetValue(data));
             }
         }
 
         void UpdateDataByDic(Dictionary<string,object> dic)
         {
             data = dic;
-            var trans = gameObject.GetComponentsInChildren<RectTransform>(true);
-            foreach (Transform t in trans)
+            
+            foreach (UISetter u in UISetters)
             {
-                if (!dic.ContainsKey(t.gameObject.name)) continue;
-                SetObj(t, dic[t.gameObject.name]);
+                if (!dic.ContainsKey(u.gameObject.name)) continue;
+                SetObj(u, dic[u.gameObject.name]);
             }
         }
 
-        void SetObj(Transform t, object obj)
+        void SetObj(UISetter uiSetter, object obj)
         {
             try
             {
-                var uiSetter = t.GetComponent<UISetter>();
                 if (uiSetter != null)
                 {
                     uiSetter.SetObj(obj);
                 }
 
-                if (t == gameObject.transform) return;
-                t.GetComponent<UIViewRoot>()?.Init(rootPanel, obj, OnEvent);
+                if (uiSetter.transform == gameObject.transform) return;
+                uiSetter.GetComponent<UIViewRoot>()?.Init(rootPanel, obj, OnEvent);
             }
             catch(Exception e)
             {
