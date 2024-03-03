@@ -23,6 +23,11 @@ namespace UuIiView
         CloseAndOpen
     }
 
+    /// <summary>
+    /// UuIiView のコア処理。
+    /// ・Json(or Dictioanry<string, object> or class)を受け取って、Childrensにアタッチされている UISetter に object を渡す
+    /// ・Childrens から上がってきた 各種Event を Reciever に渡す
+    /// </summary>
     public class UIViewRoot : MonoBehaviour
     {
         private object data;
@@ -39,15 +44,10 @@ namespace UuIiView
         private UIPanel rootPanel;
         public Action<string> OnEvent { get; private set; }
 
-        public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel.gameObject.name, btn.name, EventType.Button, data, true);
-        public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel.gameObject.name, tgl.name, EventType.Toggle, data, tgl.isOn);
-        public void SliderEvent(Slider slider) =>        ReceiveEvent(rootPanel.gameObject.name, slider.name, EventType.Slider, slider.value, true);
 
-        public void ViewEvent(string targetPanelName, string name, EventType type, bool isOn = true) => ReceiveEvent(targetPanelName, name, type, data, isOn);
-        public void ViewEvent(string name, EventType type, bool isOn = true) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, isOn);
-        public void InputEvent(string name, EventType type, string data) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, true);
-
-        // 初期化
+        // ====================================================================================================
+        // Init
+        // ====================================================================================================
         public void Init(object d, Action<string> onEvent) => Init(null, d, onEvent);
         public void Init(UIPanel root, object d) => Init(root, d, root.vm.OnEvent);
         void Init(UIPanel root, object d, Action<string> onEvent)
@@ -55,6 +55,17 @@ namespace UuIiView
             SetReceiver(onEvent);
             SetData(root, d);
         }
+
+        // ====================================================================================================
+        // Event Receiver
+        // ====================================================================================================
+        public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel.gameObject.name, btn.name, EventType.Button, data, true);
+        public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel.gameObject.name, tgl.name, EventType.Toggle, data, tgl.isOn);
+        public void SliderEvent(Slider slider) =>        ReceiveEvent(rootPanel.gameObject.name, slider.name, EventType.Slider, slider.value, true);
+
+        public void ViewEvent(string targetPanelName, string name, EventType type, bool isOn = true) => ReceiveEvent(targetPanelName, name, type, data, isOn);
+        public void ViewEvent(string name, EventType type, bool isOn = true) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, isOn);
+        public void InputEvent(string name, EventType type, string data) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, true);
 
         // イベントを受け取ってCommandLinkに変換
         public void ReceiveEvent(string panelName, string name, EventType type, object data, bool isOn)
@@ -96,7 +107,9 @@ namespace UuIiView
             this.OnEvent = onEvent;
         }
 
-        // Json( or protobuf) を渡す
+        // ====================================================================================================
+        // SetData (Json or Dictionary<string, object> or class)を渡してUIを更新する
+        // ====================================================================================================
         public void SetData(object d) => SetData(null, d);
         public void SetData(UIPanel root, object d)
         {
