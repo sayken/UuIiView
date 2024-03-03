@@ -32,14 +32,7 @@ namespace UuIiView
     {
         private object data;
         private List<UISetter> uiSetters;
-        private List<UISetter> UISetters
-        {
-            get
-            {
-                uiSetters ??= gameObject.GetComponentsInChildren<UISetter>(true).ToList();
-                return uiSetters;
-            }
-        }
+
 
         private UIPanel rootPanel;
         public Action<string> OnEvent { get; private set; }
@@ -132,18 +125,19 @@ namespace UuIiView
             }
             else
             {
-                UpdateDataByProto(d);
+                UpdateDataByClass(d);
             }
         }
 
         // 実処理
-        void UpdateDataByProto(object d)
+        void UpdateDataByClass(object d)
         {
             data = d;
+            uiSetters ??= gameObject.GetComponentsInChildren<UISetter>(true).ToList();
 
             var infos = data.GetType().GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             //Log(infos);
-            foreach (UISetter u in UISetters)
+            foreach (UISetter u in uiSetters)
             {
                 var prop = infos.FirstOrDefault(_ => _.Name == u.gameObject.name);
                 if (prop == null) continue;
@@ -154,8 +148,9 @@ namespace UuIiView
         void UpdateDataByDic(Dictionary<string,object> dic)
         {
             data = dic;
+            uiSetters ??= gameObject.GetComponentsInChildren<UISetter>(true).ToList();
             
-            foreach (UISetter u in UISetters)
+            foreach (UISetter u in uiSetters)
             {
                 if (!dic.ContainsKey(u.gameObject.name)) continue;
                 SetObj(u, dic[u.gameObject.name]);
@@ -176,8 +171,7 @@ namespace UuIiView
             }
             catch(Exception e)
             {
-                Debug.LogError("e = " + e.ToString());
-                Debug.LogError("obj = " + obj.ToString());
+                Debug.LogError("e = " + e.ToString() +"\nobj = "+ obj.ToString());
             }
         }
 
