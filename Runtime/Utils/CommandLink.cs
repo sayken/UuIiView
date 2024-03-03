@@ -42,7 +42,7 @@ namespace UuIiView
             if (paramStr.Length > 0)
                 paramStr = paramStr.Substring(1);
 
-            return ($"<color=cyan>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : IsOn={IsOn} : param=({paramStr})</color>");
+            return ($"<color=cyan>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : IsOn={IsOn} : param=({paramStr})</color>\n{this.ToString()}");
         }
     }
 }
