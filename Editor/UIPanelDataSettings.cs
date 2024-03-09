@@ -260,7 +260,7 @@ namespace UuIiView
                                 var ts = canvasRoot.transform.GetComponentsInChildren<Transform>().FirstOrDefault(_ => _.name == panel.name);
                                 if (ts == null)
                                 {
-                                    UILayer.Inst.AddPanel(panel.name).Open(null);
+                                    UILayer.Inst.AddPanel(panel.name).Open((url)=>Debug.Log(url));
                                 }
                                 else
                                 {
