@@ -63,7 +63,7 @@ namespace UuIiView
         // イベントを受け取ってCommandLinkに変換
         public void ReceiveEvent(string panelName, string name, EventType type, object data, bool isOn)
         {
-            string commandLink = panelName + "/" + name + "/" + type.ToString() + "/" + isOn;
+            string commandLink = panelName + "/" + type.ToString() + "/" + name + "/" + isOn;
             if (data != null)
             {
                 if (type == EventType.InputFieldValueChanged || type == EventType.InputFieldEndEdit )

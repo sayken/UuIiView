@@ -18,8 +18,8 @@ namespace UuIiView
 
             var arr = commandLink.Split("/");
             PanelName = arr[0];
-            EventName = arr[1];
-            EventType = (UuIiView.EventType)Enum.Parse(typeof(UuIiView.EventType), arr[2]);
+            EventType = (UuIiView.EventType)Enum.Parse(typeof(UuIiView.EventType), arr[1]);
+            EventName = arr[2];
             IsOn = bool.Parse(arr[3]);
             Id = (arr.Length >= 5) ? arr[4] : "";
             param = new Dictionary<string, string>();
