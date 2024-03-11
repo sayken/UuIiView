@@ -1,5 +1,5 @@
 # UuIiView
-UuIiViewはUnity上でUIを開発する際、uGUIを使用したMVC(P)モデルでの開発におけるViewの部分の実装を汎用化させるためのモジュールです。  
+UuIiView（ウーイービュー）はUnity上でUIを開発する際、uGUIを使用したMVC(P)モデルでの開発におけるViewの部分の実装を汎用化させるためのモジュールです。  
 
 ## 始め方
 PackageMangagerを使用します。  
