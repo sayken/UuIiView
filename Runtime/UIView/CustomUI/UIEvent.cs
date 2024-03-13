@@ -1,5 +1,8 @@
 using UnityEngine;
 
-public class UIEvent : MonoBehaviour
+namespace UuIiView
 {
+    public class UIEvent : MonoBehaviour
+    {
+    }
 }

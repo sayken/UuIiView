@@ -1,49 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UuIiView;
 
-public class UISetterList : UISetter
+namespace UuIiView
 {
-    private UIPanel uiPanelRoot;
-    [SerializeField] private UIViewRoot cellPrefab;
-    [SerializeField] private Transform listRoot;
-    [SerializeField] string itemName;
-
-    List<UIViewRoot> itemCells = new List<UIViewRoot>();
-
-    public override void Set(object obj)
+    public class UISetterList : UISetter
     {
-        var dataList = (IList)obj;
-        if (obj.GetType() == typeof(Newtonsoft.Json.Linq.JArray))
-        {
-            dataList = new List<object>();
-            foreach (var o in (IList)obj)
-            {
-                var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(o.ToString());
-                dataList.Add(d);
-            }
-        }
+        private UIPanel uiPanelRoot;
+        [SerializeField] private UIViewRoot cellPrefab;
+        [SerializeField] private Transform listRoot;
+        [SerializeField] string itemName;
 
-        uiPanelRoot = GetComponentInParent<UIPanel>();
+        List<UIViewRoot> itemCells = new List<UIViewRoot>();
 
-        for (int i = itemCells.Count; i < dataList.Count; i++)
+        public override void Set(object obj)
         {
-            var vm = Instantiate(cellPrefab, listRoot);
-            if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
-            itemCells.Add(vm);
-        }
-        for( int i=0 ; i<itemCells.Count ; i++ )
-        {
-            if (dataList.Count > i)
+            var dataList = (IList)obj;
+            if (obj.GetType() == typeof(Newtonsoft.Json.Linq.JArray))
             {
-                itemCells[i].Init(uiPanelRoot, dataList[i]);
-                itemCells[i].gameObject.SetActive(true);
+                dataList = new List<object>();
+                foreach (var o in (IList)obj)
+                {
+                    var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(o.ToString());
+                    dataList.Add(d);
+                }
             }
-            else
+
+            uiPanelRoot = GetComponentInParent<UIPanel>();
+
+            for (int i = itemCells.Count; i < dataList.Count; i++)
             {
-                itemCells[i].gameObject.SetActive(false);
+                var vm = Instantiate(cellPrefab, listRoot);
+                if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
+                itemCells.Add(vm);
+            }
+            for( int i=0 ; i<itemCells.Count ; i++ )
+            {
+                if (dataList.Count > i)
+                {
+                    itemCells[i].Init(uiPanelRoot, dataList[i]);
+                    itemCells[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    itemCells[i].gameObject.SetActive(false);
+                }
             }
         }
     }
