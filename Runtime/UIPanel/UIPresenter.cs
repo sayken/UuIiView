@@ -3,38 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using UnityEditor;
 
 namespace UuIiView
 {
-    public class UIBasePresenter : IPresenter
+    public class UIPresenter : IPresenter
     {
-        IDispatcher dispatcher;
+        Dispatcher dispatcher;
+        protected string PanelName;
         protected UIPanel uiPanel;
 
-        public UIBasePresenter(IDispatcher dispatcher)
+        public UIPresenter(Dispatcher dispatcher, string panelName, IModel model)
         {
             this.dispatcher = dispatcher;
+            PanelName = panelName;
         }
 
         /// ========================================================================
-        /// Open
+        /// Open, Close
         /// ========================================================================
-        protected UIPanel Open(string name, Action onOpen = null)
+        protected UIPanel Open(Action onOpen = null)
         {
-            uiPanel = UILayer.Inst.AddPanel(name);
+            uiPanel = UILayer.Inst.AddPanel(PanelName);
             uiPanel.OnOpen = onOpen;
             return uiPanel.Open(PassToDispatcher);
         }
 
-        protected void Close(string panelName, Action onClose = null)
+        protected void Close(Action onClose = null)
         {
             uiPanel.OnClose = onClose;
             uiPanel.Close();
         }
 
+
+
+        /// ========================================================================
+        /// Pass CommandLink to Dispatcher
+        /// ========================================================================
+
         void PassToDispatcher(string path) => PassToDispatcher(new CommandLink(path));
 
         protected void PassToDispatcher(CommandLink cmd) => dispatcher.Dispatch(cmd);
+
 
         /// ========================================================================
         /// Event
@@ -43,10 +53,8 @@ namespace UuIiView
         {
             OnEvent(new CommandLink(commandLink));
         }
-
-        public virtual void OnEvent(CommandLink command)
+        public virtual void OnEvent(CommandLink commandLink)
         {
-
         }
     }
 }

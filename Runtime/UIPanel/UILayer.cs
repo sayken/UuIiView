@@ -3,12 +3,13 @@ using UnityEngine;
 using System.Linq;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace UuIiView
 {
     public class UILayer : MonoBehaviour
     {
-        [SerializeField] UIPanelData uiPanelData;
+        UIPanelData uiPanelData;
         public List<string> layerType = new List<string>();
         Dictionary<string, RectTransform> layerContent = new Dictionary<string, RectTransform>();
         GameObject canvasRoot;
@@ -19,17 +20,12 @@ namespace UuIiView
 
         Dictionary<string, UIPanel> panelCaches = new Dictionary<string, UIPanel>();
 
-        public IDispatcher Dispatcher;
+        public Dispatcher Dispatcher { get; private set; }
 
-        private void Awake()
+        public void Initialize(UIPanelData uiPanelData)
         {
-            Initialize();
+            this.uiPanelData = uiPanelData;
 
-            Dispatcher = GetComponent<IDispatcher>();
-        }
-
-        void Initialize()
-        {
             layerType.Clear();
             layerContent.Clear();
 
@@ -57,6 +53,19 @@ namespace UuIiView
 
             TapLock(false);
 
+            Dispatcher = GetComponent<Dispatcher>();
+            if ( Dispatcher == null ) Dispatcher = gameObject.AddComponent<Dispatcher>();
+
+            var eventSystem = GetComponent<EventSystem>();
+            if ( eventSystem == null ) gameObject.AddComponent<EventSystem>();
+
+            var inputModule = GetComponent<StandaloneInputModule>();
+            if ( inputModule == null ) gameObject.AddComponent<StandaloneInputModule>();
+        }
+
+        public IEnumerable<string> GetPanelNames()
+        {
+            return uiPanelData.panels.Select(panel => panel.name);
         }
 
         public UIPanel AddPanel(string panelName)
