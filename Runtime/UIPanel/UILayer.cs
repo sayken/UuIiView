@@ -9,7 +9,6 @@ namespace UuIiView
     public class UILayer : MonoBehaviour
     {
         [SerializeField] UIPanelData uiPanelData;
-        [SerializeField] UIPanelGroup uiPanelGroup;
         public List<string> layerType = new List<string>();
         Dictionary<string, RectTransform> layerContent = new Dictionary<string, RectTransform>();
         GameObject canvasRoot;
@@ -57,11 +56,7 @@ namespace UuIiView
             }
 
             TapLock(false);
-        }
 
-        public UIGroup GetPanelGroup(string groupName)
-        {
-            return uiPanelGroup.groups.FirstOrDefault(_ => _.name == groupName);
         }
 
         public UIPanel AddPanel(string panelName)
