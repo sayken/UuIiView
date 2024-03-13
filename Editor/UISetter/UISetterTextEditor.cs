@@ -19,6 +19,8 @@ namespace UuIiView
                 nameof(UISetterText.format),
                 nameof(UISetterText.useComma),
                 nameof(UISetterText.hasLimit),
+                nameof(UISetterText.underLimitFormat),
+                nameof(UISetterText.overLimitFormat),
                 nameof(UISetterText.max),
                 nameof(UISetterText.min)
             );
@@ -60,8 +62,13 @@ namespace UuIiView
                         {
                             prop["min"].intValue = EditorGUILayout.IntField("Min", setter.min);
                             prop["max"].intValue = EditorGUILayout.IntField("Max", setter.max);
+                            prop["underLimitFormat"].stringValue = EditorGUILayout.TextField("UnderLimitFormat", setter.underLimitFormat);
+                            prop["overLimitFormat"].stringValue = EditorGUILayout.TextField("OverLimitFormat", setter.overLimitFormat);
                         }
-                        prop["format"].stringValue = EditorGUILayout.TextField("Format", setter.format);
+                        else
+                        {
+                            prop["format"].stringValue = EditorGUILayout.TextField("Format", setter.format);
+                        }
                     }
                     break;
                 case UISetterText.FormatType.Custom:

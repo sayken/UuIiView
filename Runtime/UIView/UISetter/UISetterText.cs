@@ -32,6 +32,8 @@ namespace UuIiView
         public string format = default;
         public bool useComma = true;
         public bool hasLimit = false;
+        public string underLimitFormat = default;
+        public string overLimitFormat = default;
         public int max;
         public int min;
         private TextMeshProUGUI textUI;
@@ -86,8 +88,12 @@ namespace UuIiView
                 if (int.TryParse(textStr, out int val))
                 {
                     // 表示上限、表示下限があるかどうか
+                    bool underLimit = false;
+                    bool overLimit = false;
                     if (hasLimit)
                     {
+                        underLimit = ( min > val );
+                        overLimit = ( max < val );
                         val = Math.Clamp(val, min, max);
                     }
 
@@ -102,9 +108,27 @@ namespace UuIiView
                     }
 
                     // 最後にフォーマットがあれば、それを使う
-                    if ( !string.IsNullOrEmpty(format) )
+                    string fmt = string.Empty;
+                    if ( hasLimit )
                     {
-                        textUI.text = string.Format(format, textUI.text);
+                        if ( overLimit )
+                        {
+                            fmt = overLimitFormat;
+                        }
+                        else if ( underLimit )
+                        {
+                            fmt = underLimitFormat;
+                        }
+                    }
+                    else
+                    {
+                        fmt = format;
+                    }
+                    
+                    if ( !string.IsNullOrEmpty(fmt) )
+                    {
+                        // それ以外の時のFormat
+                        textUI.text = string.Format(fmt, textUI.text);
                     }
                 }
             }
