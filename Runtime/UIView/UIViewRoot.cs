@@ -12,15 +12,21 @@ namespace UuIiView
     {
         Button,
         Toggle,
-        CustomButton,
-        CustomLongTap,
-        CustomToggle,
-        InputFieldValueChanged,
-        InputFieldEndEdit,
+        LongTap,
+        Slider,
+        Input,
+    }
+
+    public enum ActionType
+    {
+        None,
         Open,
         Close,
-        Slider,
-        CloseAndOpen
+        CloseAndOpen,
+        Action,
+        DataSync,
+        InputFieldValueChanged,
+        InputFieldEndEdit,
     }
 
     /// <summary>
@@ -52,27 +58,31 @@ namespace UuIiView
         // ====================================================================================================
         // Event Receiver
         // ====================================================================================================
-        public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel.gameObject.name, btn.name, EventType.Button, data, true);
-        public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel.gameObject.name, tgl.name, EventType.Toggle, data, tgl.isOn);
-        public void SliderEvent(Slider slider) =>        ReceiveEvent(rootPanel.gameObject.name, slider.name, EventType.Slider, slider.value, true);
+        public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel.gameObject.name, btn.name, EventType.Button, ActionType.Action, data, true);
+        public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel.gameObject.name, tgl.name, EventType.Toggle, ActionType.Action, data, tgl.isOn);
+        public void SliderEvent(Slider slider) =>        ReceiveEvent(rootPanel.gameObject.name, slider.name, EventType.Slider, ActionType.DataSync, slider.value, true);
 
-        public void ViewEvent(string targetPanelName, string name, EventType type, bool isOn = true) => ReceiveEvent(targetPanelName, name, type, data, isOn);
-        public void ViewEvent(string name, EventType type, bool isOn = true) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, isOn);
-        public void InputEvent(string name, EventType type, string data) => ReceiveEvent(rootPanel.gameObject.name, name, type, data, true);
+        public void ViewEvent(string targetPanelName, string name, EventType type, ActionType actType, bool isOn = true) => ReceiveEvent(targetPanelName, name, type, actType, data, isOn);
+        public void ViewEvent(string name, EventType type, ActionType actType, bool isOn = true) => ReceiveEvent(rootPanel.gameObject.name, name, type, actType, data, isOn);
+        public void InputEvent(string name, ActionType actType, string data) => ReceiveEvent(rootPanel.gameObject.name, name, EventType.Input, actType, data, true);
 
         // イベントを受け取ってCommandLinkに変換
-        public void ReceiveEvent(string panelName, string name, EventType type, object data, bool isOn)
+        public void ReceiveEvent(string panelName, string name, EventType eventType, ActionType actionType, object data, bool isOn)
         {
-            string commandLink = panelName + "/" + type.ToString() + "/" + name + "/" + isOn;
+            string commandLink = panelName + "/" + eventType.ToString() + "/" + actionType.ToString() + "/" + name;
             if (data != null)
             {
-                if (type == EventType.InputFieldValueChanged || type == EventType.InputFieldEndEdit )
+                if (actionType == ActionType.InputFieldValueChanged || actionType == ActionType.InputFieldEndEdit )
                 {
                     commandLink += "//Input=" + data.ToString();
                 }
-                else if ( type == EventType.Slider )
+                else if ( eventType == EventType.Slider )
                 {
                     commandLink += "//Slider=" + data.ToString();
+                }
+                else if ( eventType == EventType.Toggle )
+                {
+                    commandLink += "//Toggle=" + isOn;
                 }
                 else
                 {

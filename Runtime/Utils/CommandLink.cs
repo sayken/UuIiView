@@ -8,7 +8,7 @@ namespace UuIiView
         public string Id;
         public string EventName;
         public UuIiView.EventType EventType;
-        public bool IsOn;
+        public UuIiView.ActionType ActionType;
         public string PanelName;
         public Dictionary<string, string> param;
         string source = string.Empty;
@@ -19,8 +19,8 @@ namespace UuIiView
             var arr = commandLink.Split("/");
             PanelName = arr[0];
             EventType = (UuIiView.EventType)Enum.Parse(typeof(UuIiView.EventType), arr[1]);
-            EventName = arr[2];
-            IsOn = bool.Parse(arr[3]);
+            ActionType = (UuIiView.ActionType)Enum.Parse(typeof(UuIiView.ActionType), arr[2]);
+            EventName = arr[3];
             Id = (arr.Length >= 5) ? arr[4] : "";
             param = new Dictionary<string, string>();
             for (int i = 5; i < arr.Length; i++)
@@ -42,7 +42,7 @@ namespace UuIiView
             if (paramStr.Length > 0)
                 paramStr = paramStr.Substring(1);
 
-            return ($"<color=cyan>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : IsOn={IsOn} : param=({paramStr})</color>\n{this.ToString()}");
+            return ($"<color=cyan>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : ActionType={ActionType} : param=({paramStr})</color>\n{this.ToString()}");
         }
     }
 }

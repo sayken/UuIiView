@@ -22,7 +22,7 @@ namespace UuIiView
             DrawDefaultInspector();
 
             serializedObject.Update();
-            if ( ts.eventType == EventType.Open || ts.eventType == EventType.CloseAndOpen)
+            if ( ts.actionType == ActionType.Open || ts.actionType == ActionType.CloseAndOpen)
             {
                 prop["targetPanelName"].stringValue = EditorGUILayout.TextField("Target Panel Name", prop["targetPanelName"].stringValue);
             }
@@ -41,7 +41,7 @@ namespace UuIiView
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.Toggle("selected", prop["selected"].boolValue);
             EditorGUILayout.Toggle("disabled", prop["disabled"].boolValue);
-            EditorGUILayout.LabelField("Target Panel Name", (ts.eventType == EventType.Open) ? prop["targetPanelName"].stringValue : ts.gameObject.name);
+            EditorGUILayout.LabelField("Target Panel Name", (ts.actionType == ActionType.Open) ? prop["targetPanelName"].stringValue : ts.gameObject.name);
             EditorGUI.EndDisabledGroup();
 
         }

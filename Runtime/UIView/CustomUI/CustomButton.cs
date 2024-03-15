@@ -11,10 +11,10 @@ namespace UuIiView
     [RequireComponent(typeof(Animator))]
     public class CustomButton : UIEvent, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
-        [SerializeField] public EventType eventType;
+        [SerializeField] public ActionType actionType;
         [HideInInspector] public bool interactable;
-
         [HideInInspector] public string targetPanelName = string.Empty;
+
         public string TargetPanelName
         {
             get
@@ -122,20 +122,20 @@ namespace UuIiView
 
             onClickEvent = () =>
             {
-                if ((eventType == EventType.Open || eventType == EventType.CloseAndOpen) && !string.IsNullOrEmpty(targetPanelName))
+                if ((actionType == ActionType.Open || actionType == ActionType.CloseAndOpen) && !string.IsNullOrEmpty(targetPanelName))
                 {
-                    if ( eventType == EventType.CloseAndOpen )
+                    if ( actionType == ActionType.CloseAndOpen )
                     {
-                        viewRoot.ViewEvent(gameObject.name, EventType.Close);
+                        viewRoot.ViewEvent(gameObject.name, EventType.Button, ActionType.Close);
                     }
-                    viewRoot.ViewEvent(targetPanelName, gameObject.name, EventType.Open);
+                    viewRoot.ViewEvent(targetPanelName, gameObject.name, EventType.Button, ActionType.Open);
                 }
                 else
                 {
-                    viewRoot.ViewEvent(gameObject.name, eventType);
+                    viewRoot.ViewEvent(gameObject.name, EventType.Button, actionType);
                 }
             };
-            onLongTapEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.CustomLongTap);
+            onLongTapEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.LongTap, actionType);
 
             if (Anim != null )
             {
