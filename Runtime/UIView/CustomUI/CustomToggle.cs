@@ -7,6 +7,8 @@ namespace UuIiView
     {
         public CustomToggleGroup toggleGroup;
         [HideInInspector] public bool isOn;
+
+        UIViewRoot viewRoot;
         public bool IsOn
         {
             get
@@ -22,7 +24,7 @@ namespace UuIiView
         }
         void Awake()
         {
-            var viewRoot = GetComponent<UIViewRoot>();
+            viewRoot = GetComponent<UIViewRoot>();
             if (viewRoot == null)
             {
                 viewRoot = gameObject.GetComponentInParent<UIViewRoot>();
@@ -36,7 +38,7 @@ namespace UuIiView
                 onClickEvent = () =>
                 {
                     toggleGroup.On(this, !IsOn);
-                    viewRoot.ViewEvent(gameObject.name, EventType.CustomToggle, IsOn);
+                    // toggleGroupがある時は、toggleGroup.On経由で TriggerEventが呼ばれるので、ここでは何もしない
                 };
             }
             else
@@ -53,6 +55,11 @@ namespace UuIiView
             {
                 containsParam = Anim.parameters.Select(_ => _.name).ToList();
             }
+        }
+
+        public void TriggerEvent()
+        {
+            viewRoot.ViewEvent(gameObject.name, EventType.CustomToggle, IsOn);
         }
     }
 }

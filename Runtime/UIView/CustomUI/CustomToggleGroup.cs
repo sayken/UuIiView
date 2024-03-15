@@ -31,8 +31,12 @@ namespace UuIiView
                 // 現在選択されていないトグルを選択
                 if (!allowMultiSelect)
                 {
-                    customToggles.Where(_ => _.isOn).ToList().ForEach(_ => _.IsOn = false);
-                    toggle.IsOn = true;
+                    foreach ( var tgl in customToggles)
+                    {
+                        tgl.IsOn = (tgl==toggle);
+                        tgl.TriggerEvent();
+                    }
+
                 }
                 else if (allowMaxSelect > onCount)
                 {
