@@ -10,7 +10,9 @@ namespace UuIiView
 {
     public enum EventType
     {
-        Button,
+        None,
+        Log,
+        Button = 10,
         Toggle,
         LongTap,
         Slider,
@@ -211,5 +213,11 @@ namespace UuIiView
             Debug.Log($"<color=yellow>[UuIiView] SetData (Proto) {gameObject.name}</color>\n{sb.ToString()}");
         }
 
+        [ContextMenu("Show Repository Log")]
+        public void RepositoryLog()
+        {
+            string cmd = name +"/Log/None/ShowLog";
+            OnEvent?.Invoke(cmd);
+        }
     }
 }
