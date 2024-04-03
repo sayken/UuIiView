@@ -21,7 +21,7 @@ namespace UuIiView
             EventType = (UuIiView.EventType)Enum.Parse(typeof(UuIiView.EventType), arr[1]);
             ActionType = (UuIiView.ActionType)Enum.Parse(typeof(UuIiView.ActionType), arr[2]);
             EventName = arr[3];
-            Id = (arr.Length >= 5) ? arr[4] : "";
+            Id = arr[4];
             param = new Dictionary<string, string>();
             for (int i = 5; i < arr.Length; i++)
             {

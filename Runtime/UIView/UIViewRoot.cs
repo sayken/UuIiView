@@ -74,32 +74,36 @@ namespace UuIiView
             string commandLink = panelName + "/" + eventType.ToString() + "/" + actionType.ToString() + "/" + name;
             if (data != null)
             {
+                // IdというKeyが含まれていたら、後ろにつける
+                Dictionary<string, object> dic = new();
+                if ( data.GetType() == typeof(Dictionary<string,object>) )
+                {
+                    dic = (Dictionary<string, object>)data;
+                    if (dic.ContainsKey("Id"))
+                    {
+                        commandLink += dic["Id"];
+                    }
+                }
+
                 if (actionType == ActionType.InputFieldValueChanged || actionType == ActionType.InputFieldEndEdit )
                 {
-                    commandLink += "//Input=" + data.ToString();
+                    commandLink += "/Input=" + data.ToString();
                 }
                 else if ( eventType == EventType.Slider )
                 {
-                    commandLink += "//Slider=" + data.ToString();
+                    commandLink += "/Slider=" + data.ToString();
                 }
                 else if ( eventType == EventType.Toggle )
                 {
-                    commandLink += "//Toggle=" + isOn;
+                    commandLink += "/Toggle=" + isOn;
                 }
-                else
+
+                // 名前の最後にIdが付くものは、パラメータとしてCommandLinkに追加
+                foreach (var kv in dic)
                 {
-                    var dic = (Dictionary<string, object>)data;
-                    if (dic.ContainsKey("Id"))
+                    if (kv.Key != "Id" && kv.Key.EndsWith("Id"))
                     {
-                        commandLink += "/" + dic["Id"];
-                    }
-                    // 名前の最後にIdが付くものは、パラメータとしてCommandLinkに追加
-                    foreach (var kv in dic)
-                    {
-                        if (kv.Key != "Id" && kv.Key.EndsWith("Id"))
-                        {
-                            commandLink += $"/{kv.Key}={kv.Value}";
-                        }
+                        commandLink += $"/{kv.Key}={kv.Value}";
                     }
                 }
             }
@@ -216,7 +220,7 @@ namespace UuIiView
         [ContextMenu("Show Repository Log")]
         public void RepositoryLog()
         {
-            string cmd = name +"/Log/None/ShowLog";
+            string cmd = name +"/Log/None/ShowLog/Id";
             OnEvent?.Invoke(cmd);
         }
     }
