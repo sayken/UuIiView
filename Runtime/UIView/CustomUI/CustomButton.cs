@@ -16,26 +16,16 @@ namespace UuIiView
         [HideInInspector] public string targetPanelName = string.Empty;
         [HideInInspector] public string parentName = string.Empty;
 
-public string ParentName
-{
-    get{
-        return parentName;
-    }
-    set{
-        parentName = value;
-    }
-}
+        public string ParentName
+        {
+            get => parentName;
+            set => parentName = value;
+        }
 
         public string TargetPanelName
         {
-            get
-            {
-                return targetPanelName;
-            }
-            set
-            {
-                targetPanelName = value;
-            }
+            get => targetPanelName;
+            set => targetPanelName = value;
         }
 
         public bool Interactable
