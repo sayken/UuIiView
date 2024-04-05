@@ -10,7 +10,7 @@ namespace UuIiView
         public override void Set(object obj)
         {
             var animator = GetComponent<Animator>();
-            var paramDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(obj.ToString());
+            var paramDic = (Dictionary<string,object>)obj;
 
             foreach (var p in animator.parameters)
             {
