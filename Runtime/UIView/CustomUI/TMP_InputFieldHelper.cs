@@ -16,8 +16,8 @@ namespace UuIiView
 
             var inputField = GetComponent<TMP_InputField>();
 
-            inputField.onValueChanged.AddListener((_) => viewRoot.InputEvent(gameObject.name, ActionType.InputFieldValueChanged, _));
-            inputField.onEndEdit.AddListener((_) => viewRoot.InputEvent(gameObject.name, ActionType.InputFieldEndEdit, _));
+            inputField.onValueChanged.AddListener((_) => viewRoot.InputEvent(gameObject.name, ActionType.InputFieldValueChanged, "", _));
+            inputField.onEndEdit.AddListener((_) => viewRoot.InputEvent(gameObject.name, ActionType.InputFieldEndEdit, "", _));
         }
     }
 }

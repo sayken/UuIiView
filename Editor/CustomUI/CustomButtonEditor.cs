@@ -11,7 +11,8 @@ namespace UuIiView
                 nameof(CustomButton.interactable),
                 nameof(CustomButton.selected),
                 nameof(CustomButton.disabled),
-                nameof(CustomButton.targetPanelName)
+                nameof(CustomButton.targetPanelName),
+                nameof(CustomButton.parentName)
             );
         }
 
@@ -42,6 +43,7 @@ namespace UuIiView
             EditorGUILayout.Toggle("selected", prop["selected"].boolValue);
             EditorGUILayout.Toggle("disabled", prop["disabled"].boolValue);
             EditorGUILayout.LabelField("Target Panel Name", (ts.actionType == ActionType.Open) ? prop["targetPanelName"].stringValue : ts.gameObject.name);
+            EditorGUILayout.LabelField("Parent Name", prop["parentName"].stringValue);
             EditorGUI.EndDisabledGroup();
 
         }

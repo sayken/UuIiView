@@ -10,6 +10,7 @@ namespace UuIiView
         public UuIiView.EventType EventType;
         public UuIiView.ActionType ActionType;
         public string PanelName;
+        public string ParentName;
         public Dictionary<string, string> param;
         string source = string.Empty;
         public CommandLink(string commandLink)
@@ -21,9 +22,10 @@ namespace UuIiView
             EventType = (UuIiView.EventType)Enum.Parse(typeof(UuIiView.EventType), arr[1]);
             ActionType = (UuIiView.ActionType)Enum.Parse(typeof(UuIiView.ActionType), arr[2]);
             EventName = arr[3];
-            Id = arr[4];
+            ParentName = arr[4];
+            Id = arr[5];
             param = new Dictionary<string, string>();
-            for (int i = 5; i < arr.Length; i++)
+            for (int i = 6; i < arr.Length; i++)
             {
                 var sep = arr[i].Split("=");
                 param[sep[0]] = sep[1];
@@ -42,7 +44,7 @@ namespace UuIiView
             if (paramStr.Length > 0)
                 paramStr = paramStr.Substring(1);
 
-            return ($"<color=cyan>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : ActionType={ActionType} : param=({paramStr})</color>\n{this.ToString()}");
+            return ($"<color=cyan>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : ActionType={ActionType} : ParentName={ParentName} : param=({paramStr})</color>\n{this.ToString()}");
         }
     }
 }

@@ -46,6 +46,12 @@ namespace UuIiView
                     itemCells[i].gameObject.SetActive(false);
                 }
             }
+
+            // ボタンやトグルといったEvent系の親オブジェクトとしてselfを登録する
+            foreach ( var uiCustom in GetComponentsInChildren<IUICustom>(true))
+            {
+                uiCustom.ParentName = gameObject.name;
+            }
         }
     }
 }

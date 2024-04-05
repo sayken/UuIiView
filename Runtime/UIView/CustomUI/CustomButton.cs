@@ -9,11 +9,22 @@ using System.Linq;
 namespace UuIiView
 {
     [RequireComponent(typeof(Animator))]
-    public class CustomButton : UIEvent, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+    public class CustomButton : UIEvent, IUICustom, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
         [SerializeField] public ActionType actionType;
         [HideInInspector] public bool interactable;
         [HideInInspector] public string targetPanelName = string.Empty;
+        [HideInInspector] public string parentName = string.Empty;
+
+public string ParentName
+{
+    get{
+        return parentName;
+    }
+    set{
+        parentName = value;
+    }
+}
 
         public string TargetPanelName
         {
@@ -126,16 +137,16 @@ namespace UuIiView
                 {
                     if ( actionType == ActionType.CloseAndOpen )
                     {
-                        viewRoot.ViewEvent(gameObject.name, EventType.Button, ActionType.Close);
+                        viewRoot.ViewEvent(gameObject.name, EventType.Button, ActionType.Close, parentName);
                     }
-                    viewRoot.ViewEvent(targetPanelName, gameObject.name, EventType.Button, ActionType.Open);
+                    viewRoot.ViewEvent(targetPanelName, gameObject.name, EventType.Button, ActionType.Open, parentName);
                 }
                 else
                 {
-                    viewRoot.ViewEvent(gameObject.name, EventType.Button, actionType);
+                    viewRoot.ViewEvent(gameObject.name, EventType.Button, actionType, parentName);
                 }
             };
-            onLongTapEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.LongTap, actionType);
+            onLongTapEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.LongTap, actionType, parentName);
 
             if (Anim != null )
             {

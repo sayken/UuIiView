@@ -60,18 +60,18 @@ namespace UuIiView
         // ====================================================================================================
         // Event Receiver
         // ====================================================================================================
-        public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel.gameObject.name, btn.name, EventType.Button, ActionType.Action, data, true);
-        public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel.gameObject.name, tgl.name, EventType.Toggle, ActionType.Action, data, tgl.isOn);
-        public void SliderEvent(Slider slider) =>        ReceiveEvent(rootPanel.gameObject.name, slider.name, EventType.Slider, ActionType.DataSync, slider.value, true);
+        public void ButtonEvent(Button btn) =>           ReceiveEvent(rootPanel.gameObject.name, btn.name, EventType.Button, ActionType.Action, "", data, true);
+        public void ToggleEvent(Toggle tgl) =>           ReceiveEvent(rootPanel.gameObject.name, tgl.name, EventType.Toggle, ActionType.Action, "", data, tgl.isOn);
+        public void SliderEvent(Slider slider) =>        ReceiveEvent(rootPanel.gameObject.name, slider.name, EventType.Slider, ActionType.DataSync, "", slider.value, true);
 
-        public void ViewEvent(string targetPanelName, string name, EventType type, ActionType actType, bool isOn = true) => ReceiveEvent(targetPanelName, name, type, actType, data, isOn);
-        public void ViewEvent(string name, EventType type, ActionType actType, bool isOn = true) => ReceiveEvent(rootPanel.gameObject.name, name, type, actType, data, isOn);
-        public void InputEvent(string name, ActionType actType, string data) => ReceiveEvent(rootPanel.gameObject.name, name, EventType.Input, actType, data, true);
+        public void ViewEvent(string targetPanelName, string name, EventType type, ActionType actType, string parentName, bool isOn = true) => ReceiveEvent(targetPanelName, name, type, actType, parentName, data, isOn);
+        public void ViewEvent(string name, EventType type, ActionType actType, string parentName, bool isOn = true) => ReceiveEvent(rootPanel.gameObject.name, name, type, actType, parentName, data, isOn);
+        public void InputEvent(string name, ActionType actType, string parentName, string data) => ReceiveEvent(rootPanel.gameObject.name, name, EventType.Input, actType, parentName, data, true);
 
         // イベントを受け取ってCommandLinkに変換
-        public void ReceiveEvent(string panelName, string name, EventType eventType, ActionType actionType, object data, bool isOn)
+        public void ReceiveEvent(string panelName, string name, EventType eventType, ActionType actionType, string parentName, object data, bool isOn)
         {
-            string commandLink = panelName + "/" + eventType.ToString() + "/" + actionType.ToString() + "/" + name;
+            string commandLink = panelName + "/" + eventType.ToString() + "/" + actionType.ToString() + "/" + name + "/"+ parentName +"/";
             if (data != null)
             {
                 // IdというKeyが含まれていたら、後ろにつける
@@ -220,7 +220,7 @@ namespace UuIiView
         [ContextMenu("Show Repository Log")]
         public void RepositoryLog()
         {
-            string cmd = name +"/Log/None/ShowLog/Id";
+            string cmd = name +"/Log/None/ShowLog/ParentName/Id";
             OnEvent?.Invoke(cmd);
         }
     }

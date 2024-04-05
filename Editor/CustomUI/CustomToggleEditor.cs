@@ -11,7 +11,8 @@ namespace UuIiView
                 nameof(CustomToggle.interactable),
                 nameof(CustomToggle.selected),
                 nameof(CustomToggle.disabled),
-                nameof(CustomToggle.isOn)
+                nameof(CustomToggle.isOn),
+                nameof(CustomToggle.parentName)
             );
         }
 
@@ -36,6 +37,7 @@ namespace UuIiView
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.Toggle("selected", prop["selected"].boolValue);
             EditorGUILayout.Toggle("disabled", prop["disabled"].boolValue);
+            EditorGUILayout.LabelField("Parent Name", prop["parentName"].stringValue);
             EditorGUI.EndDisabledGroup();
 
         }
