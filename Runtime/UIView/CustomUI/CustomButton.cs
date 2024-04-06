@@ -127,16 +127,16 @@ namespace UuIiView
                 {
                     if ( actionType == ActionType.CloseAndOpen )
                     {
-                        viewRoot.ViewEvent(gameObject.name, EventType.Button, ActionType.Close, parentName);
+                        viewRoot.ReceiveEvent(gameObject.name, EventType.Button, ActionType.Close, parentName);
                     }
-                    viewRoot.ViewEvent(targetPanelName, gameObject.name, EventType.Button, ActionType.Open, parentName);
+                    viewRoot.ReceiveEvent(targetPanelName, gameObject.name, EventType.Button, ActionType.Open, parentName);
                 }
                 else
                 {
-                    viewRoot.ViewEvent(gameObject.name, EventType.Button, actionType, parentName);
+                    viewRoot.ReceiveEvent(gameObject.name, EventType.Button, actionType, parentName);
                 }
             };
-            onLongTapEvent = () => viewRoot.ViewEvent(gameObject.name, EventType.LongTap, actionType, parentName);
+            onLongTapEvent = () => viewRoot.ReceiveEvent(gameObject.name, EventType.LongTap, actionType, parentName);
 
             if (Anim != null )
             {

@@ -30,9 +30,9 @@ namespace UuIiView
                 var inputField = (TMPro.TMP_InputField)component;
 
                 inputField.onValueChanged.AddListener((input)
-                    => viewRoot.ViewEvent(viewRoot.name, gameObject.name, EventType.Input, ActionType.DataSync, parentName, input, true));
+                    => viewRoot.ReceiveEvent(viewRoot.name, gameObject.name, EventType.Input, ActionType.DataSync, parentName, input, true));
                 inputField.onEndEdit.AddListener((input)
-                    => viewRoot.ViewEvent(viewRoot.name, gameObject.name, EventType.Input, ActionType.DataSync, parentName, input, true));
+                    => viewRoot.ReceiveEvent(viewRoot.name, gameObject.name, EventType.Input, ActionType.DataSync, parentName, input, true));
             }
             else if( component.GetType() == typeof(Button) )
             {
@@ -50,7 +50,7 @@ namespace UuIiView
             {
                 var slider = (Slider)component;
                 slider.onValueChanged.AddListener(val
-                    => viewRoot.ViewEvent(viewRoot.name, gameObject.name, EventType.Slider, ActionType.DataSync, parentName, val, true));
+                    => viewRoot.ReceiveEvent(viewRoot.name, gameObject.name, EventType.Slider, ActionType.DataSync, parentName, val, true));
             }
         }
 
@@ -60,13 +60,13 @@ namespace UuIiView
             {
                 if ( actionType == ActionType.CloseAndOpen )
                 {
-                    viewRoot.ViewEvent(gameObject.name, eventType, ActionType.Close, parentName, isOn);
+                    viewRoot.ReceiveEvent(gameObject.name, eventType, ActionType.Close, parentName, isOn);
                 }
-                viewRoot.ViewEvent(targetPanelName, gameObject.name, eventType, ActionType.Open, parentName, isOn);
+                viewRoot.ReceiveEvent(targetPanelName, gameObject.name, eventType, ActionType.Open, parentName, isOn);
             }
             else
             {
-                viewRoot.ViewEvent(gameObject.name, eventType, actionType, parentName, isOn);
+                viewRoot.ReceiveEvent(gameObject.name, eventType, actionType, parentName, isOn);
             }
         }
     }

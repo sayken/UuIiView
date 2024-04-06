@@ -6,8 +6,8 @@ namespace UuIiView
     [RequireComponent(typeof(UIViewRoot))]
     public class UIPanel : MonoBehaviour
     {
-        UIViewRoot _vm;
-        public UIViewRoot vm => _vm ??= GetComponent<UIViewRoot>();
+        UIViewRoot vm;
+        public UIViewRoot ViewRoot => vm ??= GetComponent<UIViewRoot>();
         ITransition transition;
 
         public Action OnOpen;
@@ -33,8 +33,8 @@ namespace UuIiView
 
             UILayer.Inst.TapLock(true);
 
-            vm.SetData(d);
-            if (onEvent != null) vm.SetReceiver(onEvent);
+            ViewRoot.SetData(d);
+            if (onEvent != null) ViewRoot.SetReceiver(onEvent);
 
             UILayer.Inst.SortPanel();
             transition = GetComponent<ITransition>();
@@ -56,7 +56,7 @@ namespace UuIiView
             isOpened = true;
         }
 
-        public void UpdateData(object o) => vm.SetData(o);
+        public void UpdateData(object o) => ViewRoot.SetData(o);
 
         public void Close(bool forceDestroy = false)
         {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Linq;
 using System;
 using System.Reflection;
@@ -47,9 +46,9 @@ namespace UuIiView
         // ====================================================================================================
         // Init
         // ====================================================================================================
-        public void Init(object d, Action<string> onEvent) => Init(null, d, onEvent);
-        public void Init(UIPanel root, object d) => Init(root, d, root.vm.OnEvent);
-        void Init(UIPanel root, object d, Action<string> onEvent)
+        public void Init(object d, Action<string> onEvent) => InitInternal(null, d, onEvent);
+        public void Init(UIPanel root, object d) => InitInternal(root, d, root.ViewRoot.OnEvent);
+        void InitInternal(UIPanel root, object d, Action<string> onEvent)
         {
             SetReceiver(onEvent);
             SetData(root, d);
@@ -58,15 +57,15 @@ namespace UuIiView
         // ====================================================================================================
         // Event Receiver
         // ====================================================================================================
-        public void ViewEvent(string targetPanelName, string name, EventType type, ActionType actType, string parentName, object data, bool isOn = true)
-            => ReceiveEvent(targetPanelName, name, type, actType, parentName, data, isOn);
-        public void ViewEvent(string targetPanelName, string name, EventType type, ActionType actType, string parentName, bool isOn = true)
-            => ReceiveEvent(targetPanelName, name, type, actType, parentName, data, isOn);
-        public void ViewEvent(string name, EventType type, ActionType actType, string parentName, bool isOn = true)
-            => ReceiveEvent(rootPanel.gameObject.name, name, type, actType, parentName, data, isOn);
+        public void ReceiveEvent(string targetPanelName, string name, EventType type, ActionType actType, string parentName, object data, bool isOn = true)
+            => ReceiveEventInternal(targetPanelName, name, type, actType, parentName, data, isOn);
+        public void ReceiveEvent(string targetPanelName, string name, EventType type, ActionType actType, string parentName, bool isOn = true)
+            => ReceiveEventInternal(targetPanelName, name, type, actType, parentName, data, isOn);
+        public void ReceiveEvent(string name, EventType type, ActionType actType, string parentName, bool isOn = true)
+            => ReceiveEventInternal(rootPanel.gameObject.name, name, type, actType, parentName, data, isOn);
 
         // イベントを受け取ってCommandLinkに変換
-        void ReceiveEvent(string panelName, string name, EventType eventType, ActionType actionType, string parentName, object data, bool isOn)
+        void ReceiveEventInternal(string panelName, string name, EventType eventType, ActionType actionType, string parentName, object data, bool isOn)
         {
             StringBuilder commandLink = new StringBuilder();
             commandLink.Append($"{panelName}/{eventType}/{actionType}/{name}/{parentName}/");
@@ -170,7 +169,7 @@ namespace UuIiView
                 }
 
                 if (uiSetter.transform == gameObject.transform) return;
-                uiSetter.GetComponent<UIViewRoot>()?.Init(rootPanel, obj, OnEvent);
+                uiSetter.GetComponent<UIViewRoot>()?.InitInternal(rootPanel, obj, OnEvent);
             }
             catch(Exception e)
             {
