@@ -202,12 +202,5 @@ namespace UuIiView
             }
             Debug.Log($"<color=yellow>[UuIiView] SetData (Proto) {gameObject.name}</color>\n{sb.ToString()}");
         }
-
-        [ContextMenu("Show Repository Log")]
-        public void RepositoryLog()
-        {
-            string cmd = name +"/Log/None/ShowLog/ParentName/Id";
-            OnEvent?.Invoke(cmd);
-        }
     }
 }
