@@ -1,7 +1,8 @@
 {
     "name": "UuIiView",
     "references": [
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "UniRx"
     ],
     "includePlatforms": [],
     "excludePlatforms": []

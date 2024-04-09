@@ -23,6 +23,16 @@ namespace UuIiView
         }
 
         /// <summary>
+        /// Presenterを取得する
+        /// </summary>
+        /// <param name="panelName">取得したpresenterの名前</param>
+        /// <returns>指定したpresenter（見つからない場合はnull）</returns>
+        public IPresenter GetPresenter(string panelName)
+        {
+            return presenters.ContainsKey(panelName) ? presenters[panelName] : null;
+        }
+
+        /// <summary>
         /// 全てのEventを受け取って、処理対象のPresenterに処理を渡す
         /// </summary>
         /// <param name="cmd"></param>
