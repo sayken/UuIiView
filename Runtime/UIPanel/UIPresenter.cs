@@ -13,10 +13,13 @@ namespace UuIiView
         public Repository Repo => repo;
         CompositeDisposable disposable = new ();
 
-        public UIPresenter(Dispatcher dispatcher, string panelName, IModel model)
+        protected Model model;
+
+        public UIPresenter(Dispatcher dispatcher, string panelName, Model model)
         {
             this.dispatcher = dispatcher;
             PanelName = panelName;
+            this.model = model;
 
             repo = new Repository();
         }

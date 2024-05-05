@@ -16,7 +16,7 @@ namespace UuIiView
         /// <param name="panelName"></param>
         /// <param name="type"></param>
         /// <param name="model"></param>
-        public void SetPresenter(string panelName, Type type, IModel model)
+        public void SetPresenter(string panelName, Type type, Model model)
         {
             IPresenter obj = (IPresenter)Activator.CreateInstance(type, UILayer.Inst.Dispatcher, panelName, model);
             presenters.Add(panelName, obj);
