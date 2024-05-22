@@ -63,4 +63,4 @@ Dispatcherは渡されたCommandLinkから、処理対象のPresenterを判定�
 ## UIPanelSettings
 ![画像3](https://github.com/sayken/UuIiView/assets/6512883/52c6e7dc-219d-4d0e-b464-be30a09fe82b)
 
-編集中 
+まだ編集中 
