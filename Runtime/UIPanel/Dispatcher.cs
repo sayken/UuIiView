@@ -7,6 +7,7 @@ namespace UuIiView
     [RequireComponent(typeof(UILayer))]
     public class Dispatcher : MonoBehaviour
     {
+        public Dictionary<string, UIGroup> uiPanelGroups = new ();
         // 全Presenterのインスタンスを保持
         public Dictionary<string, IPresenter> presenters { get; private set; }= new ();
 
@@ -32,6 +33,14 @@ namespace UuIiView
             return presenters.ContainsKey(panelName) ? presenters[panelName] : null;
         }
 
+        public void SetPanelGroup(UIPanelGroup uiPanelGroup)
+        {
+            foreach ( var group in uiPanelGroup.groups)
+            {
+                uiPanelGroups[group.name] = group;
+            }
+        }
+
         /// <summary>
         /// 全てのEventを受け取って、処理対象のPresenterに処理を渡す
         /// </summary>
@@ -39,8 +48,26 @@ namespace UuIiView
         public void Dispatch(CommandLink cmd)
         {
             Debug.Log(cmd.Log());
-            
-            presenters[cmd.PanelName].OnEvent(cmd);
+
+            if ( uiPanelGroups.ContainsKey(cmd.PanelName))
+            {
+                // PanelGroupに処理を渡す
+                PanelGroupEvent(uiPanelGroups[cmd.PanelName].panelNames, cmd);
+            }
+            else
+            {
+                // Presenterに処理を渡す
+                presenters[cmd.PanelName].OnEvent(cmd);
+            }
+        }
+
+        void PanelGroupEvent(List<string> panelNames, CommandLink cmd)
+        {
+            foreach ( var name in panelNames)
+            {
+                cmd.PanelName = name;
+                presenters[cmd.PanelName].OnEvent(cmd);
+            }
         }
     }
 }
