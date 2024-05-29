@@ -137,6 +137,10 @@ namespace UuIiView
                     }
                     viewRoot.ReceiveEvent(targetPanelName, gameObject.name, EventType.Button, ActionType.Open, parentName);
                 }
+                else if ( actionType == ActionType.ActionToPanel && !string.IsNullOrEmpty(targetPanelName))
+                {
+                    viewRoot.ReceiveEvent(targetPanelName, gameObject.name, EventType.Button, ActionType.Action, parentName);
+                }
                 else
                 {
                     viewRoot.ReceiveEvent(gameObject.name, EventType.Button, actionType, parentName);

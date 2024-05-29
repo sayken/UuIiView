@@ -24,7 +24,7 @@ namespace UuIiView
             DrawDefaultInspector();
 
             serializedObject.Update();
-            if ( ts.actionType == ActionType.Open || ts.actionType == ActionType.CloseAndOpen || ts.actionType == ActionType.CloseGroupAndOpen)
+            if ( ts.actionType == ActionType.Open || ts.actionType == ActionType.CloseAndOpen || ts.actionType == ActionType.CloseGroupAndOpen || ts.actionType == ActionType.ActionToPanel)
             {
                 prop["targetPanelName"].stringValue = EditorGUILayout.TextField("Target Panel Name", prop["targetPanelName"].stringValue);
             }
