@@ -12,7 +12,8 @@ namespace UuIiView
                 nameof(CustomButton.selected),
                 nameof(CustomButton.disabled),
                 nameof(CustomButton.targetPanelName),
-                nameof(CustomButton.parentName)
+                nameof(CustomButton.parentName),
+                nameof(CustomButton.closeGroupName)
             );
         }
 
@@ -23,9 +24,13 @@ namespace UuIiView
             DrawDefaultInspector();
 
             serializedObject.Update();
-            if ( ts.actionType == ActionType.Open || ts.actionType == ActionType.CloseAndOpen)
+            if ( ts.actionType == ActionType.Open || ts.actionType == ActionType.CloseAndOpen || ts.actionType == ActionType.CloseGroupAndOpen)
             {
                 prop["targetPanelName"].stringValue = EditorGUILayout.TextField("Target Panel Name", prop["targetPanelName"].stringValue);
+            }
+            if ( ts.actionType == ActionType.CloseGroupAndOpen )
+            {
+                prop["closeGroupName"].stringValue = EditorGUILayout.TextField("Close Group Name", prop["closeGroupName"].stringValue);
             }
 
             EditorGUILayout.Space();
@@ -43,6 +48,7 @@ namespace UuIiView
             EditorGUILayout.Toggle("selected", prop["selected"].boolValue);
             EditorGUILayout.Toggle("disabled", prop["disabled"].boolValue);
             EditorGUILayout.LabelField("Target Panel Name", (ts.actionType == ActionType.Open) ? prop["targetPanelName"].stringValue : ts.gameObject.name);
+            EditorGUILayout.LabelField("Close Group Name", (ts.actionType == ActionType.CloseGroupAndOpen) ? prop["closeGroupName"].stringValue : ts.gameObject.name);
             EditorGUILayout.LabelField("Parent Name", prop["parentName"].stringValue);
             EditorGUI.EndDisabledGroup();
 

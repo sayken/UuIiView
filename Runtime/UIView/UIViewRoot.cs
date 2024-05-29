@@ -26,6 +26,7 @@ namespace UuIiView
         CloseAndOpen,
         Action,
         DataSync,
+        CloseGroupAndOpen,
     }
 
     /// <summary>

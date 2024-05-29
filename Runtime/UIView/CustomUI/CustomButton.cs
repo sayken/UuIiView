@@ -15,6 +15,7 @@ namespace UuIiView
         [HideInInspector] public bool interactable;
         [HideInInspector] public string targetPanelName = string.Empty;
         [HideInInspector] public string parentName = string.Empty;
+        [HideInInspector] public string closeGroupName = string.Empty;
 
         public string ParentName
         {
@@ -123,11 +124,16 @@ namespace UuIiView
 
             onClickEvent = () =>
             {
-                if ((actionType == ActionType.Open || actionType == ActionType.CloseAndOpen) && !string.IsNullOrEmpty(targetPanelName))
+                if ((actionType == ActionType.Open || actionType == ActionType.CloseAndOpen || actionType == ActionType.CloseGroupAndOpen) && !string.IsNullOrEmpty(targetPanelName))
                 {
+                    // Debug.Log("CustomButton "+ actionType +" / "+ closeGroupName);
                     if ( actionType == ActionType.CloseAndOpen )
                     {
                         viewRoot.ReceiveEvent(gameObject.name, EventType.Button, ActionType.Close, parentName);
+                    }
+                    else if ( actionType == ActionType.CloseGroupAndOpen)
+                    {
+                        viewRoot.ReceiveEvent(closeGroupName, gameObject.name, EventType.Button, ActionType.Close, parentName);
                     }
                     viewRoot.ReceiveEvent(targetPanelName, gameObject.name, EventType.Button, ActionType.Open, parentName);
                 }

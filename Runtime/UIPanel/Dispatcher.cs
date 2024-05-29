@@ -7,9 +7,10 @@ namespace UuIiView
     [RequireComponent(typeof(UILayer))]
     public class Dispatcher : MonoBehaviour
     {
-        public Dictionary<string, UIGroup> uiPanelGroups = new ();
         // 全Presenterのインスタンスを保持
         public Dictionary<string, IPresenter> presenters { get; private set; }= new ();
+        // 全GroupPresenterのインスタンスを保持
+        public Dictionary<string, IGroupPresenter> groupPresenters { get; private set;} = new ();
 
         /// <summary>
         /// Presenterをセットする
@@ -33,12 +34,20 @@ namespace UuIiView
             return presenters.ContainsKey(panelName) ? presenters[panelName] : null;
         }
 
-        public void SetPanelGroup(UIPanelGroup uiPanelGroup)
+        public void SetGroupPresenter(Type type, UIGroup group, Model model)
         {
-            foreach ( var group in uiPanelGroup.groups)
+            // Debug.Log("Type = "+ type.ToString());
+            IGroupPresenter groupPresenter = (IGroupPresenter)Activator.CreateInstance(type, UILayer.Inst.Dispatcher, group.name, model);
+            foreach ( var panelName in group.panelNames)
             {
-                uiPanelGroups[group.name] = group;
+                if ( !presenters.ContainsKey(panelName) )
+                {
+                    Debug.LogError($"[{panelName}Presenter] Not found in prsenters");
+                    return;
+                }
+                groupPresenter.AddPresenter(presenters[panelName]);
             }
+            groupPresenters[group.name] = groupPresenter;
         }
 
         /// <summary>
@@ -49,10 +58,10 @@ namespace UuIiView
         {
             Debug.Log(cmd.Log());
 
-            if ( uiPanelGroups.ContainsKey(cmd.PanelName))
+            if ( groupPresenters.ContainsKey(cmd.PanelName))
             {
-                // PanelGroupに処理を渡す
-                PanelGroupEvent(uiPanelGroups[cmd.PanelName].panelNames, cmd);
+                // GroupPresenterに処理を渡す
+                groupPresenters[cmd.PanelName].OnEvent(cmd);
             }
             else
             {
@@ -61,13 +70,14 @@ namespace UuIiView
             }
         }
 
-        void PanelGroupEvent(List<string> panelNames, CommandLink cmd)
+
+        public void Log()
         {
-            foreach ( var name in panelNames)
+            foreach ( var a in groupPresenters)
             {
-                cmd.PanelName = name;
-                presenters[cmd.PanelName].OnEvent(cmd);
+                Debug.Log($"groupPresenterName = {a.Key} : count = {a.Value.presenters.Count}");
             }
+
         }
     }
 }
