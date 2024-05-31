@@ -170,6 +170,11 @@ namespace UuIiView
             StartCoroutine(_CloseByLayer(layerNames));
         }
 
+        public void CloseAllLayers()
+        {
+            StartCoroutine(_CloseByLayer(layerType.ToArray()));
+        }
+
         public IEnumerator _CloseByLayer(params string[] layerNames)
         {
             yield return null;
