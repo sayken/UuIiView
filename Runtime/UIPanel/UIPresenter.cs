@@ -31,13 +31,15 @@ namespace UuIiView
         {
             uiPanel = UILayer.Inst.AddPanel(PanelName);
             uiPanel.OnOpen = onOpen;
+            uiPanel.OnClose = ()=>{ClearBind();};
             return uiPanel.Open(PassToDispatcher);
         }
 
         protected void Close(Action onClose = null)
         {
-            uiPanel.OnClose = onClose;
+            onClose?.Invoke();
             uiPanel.Close();
+            ClearBind();
         }
 
 
@@ -69,7 +71,7 @@ namespace UuIiView
                     break;
                 case UuIiView.ActionType.Close:
                     Close();
-                    ClearBind();
+                    
                     break;
                 case UuIiView.ActionType.DataSync:
                     DataSync(commandLink);
@@ -123,6 +125,7 @@ namespace UuIiView
         }
         protected void ClearBind()
         {
+            disposable.Dispose();
             disposable.Clear();
         }
     }
