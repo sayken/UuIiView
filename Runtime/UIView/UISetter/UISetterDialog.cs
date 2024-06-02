@@ -15,19 +15,19 @@ namespace UuIiView
         {
             var datas = (IList)obj;
 
-            foreach ( var dObj in datas )
+            foreach ( var data in datas )
             {
-                var data = (Dictionary<string,object>)dObj;
-                var prefab = (bool)data["IsPositive"] ? positiveButtonPrefab : negativeButtonPrefab;
+                var dic = JsonConvert.DeserializeObject<Dictionary<string,object>>(data.ToString());
+                var prefab = (bool)dic["IsPositive"] ? positiveButtonPrefab : negativeButtonPrefab;
                 var go = Instantiate(prefab, transform);
-                go.name = (string)data["EventName"];
-                go.GetComponentInChildren<TextMeshProUGUI>().text = (string)data["Name"];
+                go.name = (string)dic["EventName"];
+                go.GetComponentInChildren<TextMeshProUGUI>().text = (string)dic["Name"];
 
                 CustomButton customButton = go.GetComponent<CustomButton>();
-                if ( data.ContainsKey("TargetParentName") )
+                if ( dic.ContainsKey("TargetParentName") )
                 {
                     customButton.actionType = ActionType.ActionToPanel;
-                    customButton.TargetPanelName = (string)data["TargetParentName"];
+                    customButton.TargetPanelName = (string)dic["TargetParentName"];
                 }
                 else
                 {

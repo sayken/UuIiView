@@ -46,8 +46,8 @@ namespace UuIiView
 
             if ( GUILayout.Button("Show Repository") )
             {
-                var presenter = (UIPresenter)dispatcher.GetPresenter(uiPanelNames[selectedIndex]);
-                presenter.Repo.Log();
+                var presenter = (ReactivePresenter)dispatcher.GetPresenter(uiPanelNames[selectedIndex]);
+                presenter.ViewModel.Log();
 
                 // string cmd = uiPanelNames[selectedIndex] +"/Log/None/ShowLog/ParentName/Id";
                 // dispatcher.Dispatch(new CommandLink(cmd));

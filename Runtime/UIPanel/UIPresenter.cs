@@ -9,10 +9,6 @@ namespace UuIiView
         protected string PanelName;
         protected UIPanel uiPanel;
 
-        protected Repository repo;
-        public Repository Repo => repo;
-        CompositeDisposable disposable = new ();
-
         protected Model model;
 
         public UIPresenter(Dispatcher dispatcher, string panelName, Model model)
@@ -20,28 +16,23 @@ namespace UuIiView
             this.dispatcher = dispatcher;
             PanelName = panelName;
             this.model = model;
-
-            repo = new Repository();
         }
 
         /// ========================================================================
         /// Open, Close
         /// ========================================================================
-        protected UIPanel Open(Action onOpen = null)
+        protected virtual UIPanel Open(Action onOpen = null)
         {
             uiPanel = UILayer.Inst.AddPanel(PanelName);
             uiPanel.OnOpen = onOpen;
-            uiPanel.OnClose = ()=>{ClearBind();};
             return uiPanel.Open(PassToDispatcher);
         }
 
-        protected void Close(Action onClose = null)
+        protected virtual void Close(Action onClose = null)
         {
             onClose?.Invoke();
             uiPanel.Close();
-            ClearBind();
         }
-
 
 
         /// ========================================================================
@@ -66,67 +57,19 @@ namespace UuIiView
             {
                 case UuIiView.ActionType.Open:
                     Open();
-                    Bind();
-                    repo.Init(GetInitData(commandLink));
+                    uiPanel.UpdateData(GetInitData(commandLink));
                     break;
                 case UuIiView.ActionType.Close:
                     Close();
-                    
-                    break;
-                case UuIiView.ActionType.DataSync:
-                    DataSync(commandLink);
                     break;
                 default:
                     break;
             }
         }
 
-        void DataSync(CommandLink commandLink)
-        {
-            if ( commandLink.EventType == EventType.Slider )
-            {
-                if ( float.TryParse(commandLink.param["Slider"], out float val) )
-                {
-                    Sync(commandLink, val);
-                }
-            }
-            else if ( commandLink.EventType == EventType.Toggle )
-            {
-                if ( bool.TryParse(commandLink.param["Toggle"], out bool val) )
-                {
-                    Sync(commandLink, val);
-                }
-            }
-            else if ( commandLink.EventType == EventType.Input )
-            {
-                Sync(commandLink, commandLink.param["Input"]);
-            }
-        }
-        void Sync(CommandLink commandLink, object val)
-        {
-            if ( !string.IsNullOrEmpty(commandLink.ParentName) )
-            {
-                repo.SyncListItem(commandLink.ParentName, commandLink.Id, commandLink.EventName, val);
-            }
-            else if ( string.IsNullOrEmpty(commandLink.Id) )
-            {
-                repo.Sync(commandLink.EventName, val);
-            }
-        }
-
         protected virtual string GetInitData(CommandLink commandLink)
         {
             return "{}";
-        }
-        
-        protected void Bind()
-        {
-            repo.Data.Subscribe( data => { if ( data!=null ) uiPanel.UpdateData(data); } ).AddTo(disposable);
-        }
-        protected void ClearBind()
-        {
-            disposable.Dispose();
-            disposable.Clear();
         }
     }
 }

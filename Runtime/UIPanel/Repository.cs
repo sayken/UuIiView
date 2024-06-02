@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace UuIiView
 {
-    public class Repository
+    public class ViewModel
     {
         public ReactiveProperty<Dictionary<string,object>> Data = new ReactiveProperty<Dictionary<string, object>>();
         private Dictionary<string,object> data;
