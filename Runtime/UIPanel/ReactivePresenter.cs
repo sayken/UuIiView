@@ -10,7 +10,7 @@ namespace UuIiView
 
         public ReactivePresenter(Dispatcher dispatcher, string panelName, Model model) : base(dispatcher, panelName, model)
         {
-            viewModel = new ViewModel(uiPanel.UpdateData);
+            viewModel = new ViewModel(Bind);
         }
 
         protected override UIPanel Open(Action onOpen = null)
