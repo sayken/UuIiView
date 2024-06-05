@@ -1,5 +1,4 @@
 using System;
-using UniRx;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,10 +11,15 @@ namespace UuIiView
 {
     public class ViewModel
     {
-        public ReactiveProperty<Dictionary<string,object>> Data = new ReactiveProperty<Dictionary<string, object>>();
+        private Action<Dictionary<string,object>> bind;
         private Dictionary<string,object> data;
         private List<string> updatedKeys = new List<string>();
         private Dictionary<string,List<string>> updatedListKeys = new ();
+
+        public ViewModel(Action<Dictionary<string,object>> bind)
+        {
+            this.bind = bind;
+        }
 
         public void Init(string json)
         {
@@ -54,7 +58,7 @@ namespace UuIiView
         void BaseInit(Dictionary<string, object> dic)
         {
             data = new Dictionary<string, object>(dic);
-            Data.SetValueAndForceNotify(data);
+            bind?.Invoke(data);
         }
 
         /// <summary>
@@ -175,7 +179,14 @@ namespace UuIiView
                 dat[rootKey] = list;
             }
 
-            Data.SetValueAndForceNotify(dat);
+            bind?.Invoke(dat);
+        }
+
+        public void Clear()
+        {
+            data.Clear();
+            updatedKeys.Clear();
+            updatedListKeys.Clear();
         }
 
         public void Log()

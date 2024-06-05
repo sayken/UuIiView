@@ -1,5 +1,5 @@
 using System;
-using UniRx;
+using System.Collections.Generic;
 
 namespace UuIiView
 {
@@ -7,11 +7,10 @@ namespace UuIiView
     {
         protected ViewModel viewModel;
         public ViewModel ViewModel => viewModel;
-        CompositeDisposable disposable = new ();
 
         public ReactivePresenter(Dispatcher dispatcher, string panelName, Model model) : base(dispatcher, panelName, model)
         {
-            viewModel = new ViewModel();
+            viewModel = new ViewModel(uiPanel.UpdateData);
         }
 
         protected override UIPanel Open(Action onOpen = null)
@@ -33,7 +32,6 @@ namespace UuIiView
             {
                 case UuIiView.ActionType.Open:
                     Open();
-                    Bind();
                     viewModel.Init(GetInitData(commandLink));
                     break;
                 case UuIiView.ActionType.Close:
@@ -81,14 +79,16 @@ namespace UuIiView
             }
         }
         
-        protected void Bind()
+        protected void Bind(Dictionary<string,object> data)
         {
-            viewModel.Data.Subscribe( data => { if ( data!=null ) uiPanel.UpdateData(data); } ).AddTo(disposable);
+            if ( data!=null )
+            {
+                uiPanel.UpdateData(data);
+            }
         }
         protected void ClearBind()
         {
-            disposable.Dispose();
-            disposable.Clear();
+            viewModel.Clear();
         }
     }
 }
