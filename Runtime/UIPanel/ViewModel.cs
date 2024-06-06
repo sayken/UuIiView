@@ -120,6 +120,16 @@ namespace UuIiView
             return false;
         }
 
+        public object Get(string key)
+        {
+            if ( data.TryGetValue(key, out var value) )
+            {
+                return value;
+            }
+            return null;
+        }
+
+
 
 
         /// <summary>

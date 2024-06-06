@@ -110,7 +110,6 @@ namespace UuIiView
         public void SetData(object d) => SetData(null, d);
         public void SetData(UIPanel root, object d)
         {
-            Debug.Log("UIViewRoot.SetData");
             rootPanel = root == null ? GetComponent<UIPanel>() : root;
 
             if ( d == null )
