@@ -23,7 +23,10 @@ namespace UuIiView
         /// ========================================================================
         protected virtual UIPanel Open(Action onOpen = null)
         {
-            uiPanel = UILayer.Inst.AddPanel(PanelName);
+            if ( uiPanel == null )
+            {
+                uiPanel = UILayer.Inst.AddPanel(PanelName);
+            }
             uiPanel.OnOpen = onOpen;
             return uiPanel.Open(PassToDispatcher);
         }
