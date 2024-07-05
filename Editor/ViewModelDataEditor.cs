@@ -7,14 +7,14 @@ using System.IO;
 
 namespace UuIiView
 {
-    public class ViewRepositoryEditor : EditorWindow
+    public class ViewModelDataEditor : EditorWindow
     {
-        [MenuItem("Tools/UuIiView/View Repository Contents")]
+        [MenuItem("Tools/UuIiView/ViewModelData")]
         static void ShowEditor()
         {
-            var window = EditorWindow.GetWindow<ViewRepositoryEditor>(typeof(SceneView));
+            var window = EditorWindow.GetWindow<ViewModelDataEditor>(typeof(SceneView));
             Texture icon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Packages/UuIiView/Editor/Icons/icon.png");
-            window.titleContent = new GUIContent(" View Repository", icon);
+            window.titleContent = new GUIContent(" ViewModelData", icon);
         }
 
         GameObject canvasRoot;
