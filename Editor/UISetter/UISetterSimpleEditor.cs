@@ -12,7 +12,7 @@ namespace UuIiView
         {
             Add(
                 nameof(UISetterSimple.uiType),
-                nameof(UISetterSimple.uiPanelRoot),
+                nameof(UISetterSimple.rootUIViewRoot),
                 nameof(UISetterSimple.cellPrefab),
                 nameof(UISetterSimple.itemName)
             );
@@ -31,7 +31,7 @@ namespace UuIiView
 
             if (setter.uiType == UIType.List)
             {
-                prop["uiPanelRoot"].objectReferenceValue = (UIPanel)EditorGUILayout.ObjectField("UI Panel Root", setter.uiPanelRoot, typeof(UIPanel), true); ;
+                prop["uiPanelRoot"].objectReferenceValue = (UIPanel)EditorGUILayout.ObjectField("UI Panel Root", setter.rootUIViewRoot, typeof(UIPanel), true); ;
                 prop["cellPrefab"].objectReferenceValue = (UIViewRoot)EditorGUILayout.ObjectField("Cell Prefab", setter.cellPrefab, typeof(UIViewRoot), true);
                 prop["itemName"].stringValue = EditorGUILayout.TextField("Item Name", setter.itemName);
             }

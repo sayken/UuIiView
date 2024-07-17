@@ -129,7 +129,7 @@ namespace UuIiView
         }
 
         // ===== For List =================================================================================================
-        public UIPanel uiPanelRoot;
+        public UIViewRoot rootUIViewRoot;
         public UIViewRoot cellPrefab;
         public string itemName;
 
@@ -155,14 +155,14 @@ namespace UuIiView
                 if ( itemCells.Count > i )
                 {
                     // 既にitemCellsにデータがあるので流用
-                    itemCells[i].Init(uiPanelRoot, dataList[i]);
+                    itemCells[i].Init(rootUIViewRoot, dataList[i]);
                 }
                 else
                 {
                     // itemCellsにデータが無い（or 足りない）ので追加
                     var vm = Instantiate(cellPrefab, listRoot);
                     if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
-                    vm.Init(uiPanelRoot, dataList[i]);
+                    vm.Init(rootUIViewRoot, dataList[i]);
                     itemCells.Add(vm);
                 }
             }

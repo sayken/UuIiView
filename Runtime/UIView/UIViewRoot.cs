@@ -41,7 +41,7 @@ namespace UuIiView
         private List<UISetter> uiSetters;
 
 
-        private UIPanel rootPanel;
+        private UIViewRoot rootUIViewRoot;
         public Action<string> OnEvent { get; private set; }
 
 
@@ -49,8 +49,8 @@ namespace UuIiView
         // Init
         // ====================================================================================================
         public void Init(object d, Action<string> onEvent) => InitInternal(null, d, onEvent);
-        public void Init(UIPanel root, object d) => InitInternal(root, d, root.ViewRoot.OnEvent);
-        void InitInternal(UIPanel root, object d, Action<string> onEvent)
+        public void Init(UIViewRoot root, object d) => InitInternal(root, d, root.OnEvent);
+        void InitInternal(UIViewRoot root, object d, Action<string> onEvent)
         {
             SetReceiver(onEvent);
             SetData(root, d);
@@ -64,7 +64,7 @@ namespace UuIiView
         public void ReceiveEvent(string targetPanelName, string name, EventType type, ActionType actType, string parentName, bool isOn = true)
             => ReceiveEventInternal(targetPanelName, name, type, actType, parentName, data, isOn);
         public void ReceiveEvent(string name, EventType type, ActionType actType, string parentName, bool isOn = true)
-            => ReceiveEventInternal(rootPanel.gameObject.name, name, type, actType, parentName, data, isOn);
+            => ReceiveEventInternal(rootUIViewRoot.gameObject.name, name, type, actType, parentName, data, isOn);
 
         // イベントを受け取ってCommandLinkに変換
         void ReceiveEventInternal(string panelName, string name, EventType eventType, ActionType actionType, string parentName, object data, bool isOn)
@@ -108,9 +108,9 @@ namespace UuIiView
         // SetData (Json or Dictionary<string, object> or class)を渡してUIを更新する
         // ====================================================================================================
         public void SetData(object d) => SetData(null, d);
-        public void SetData(UIPanel root, object d)
+        public void SetData(UIViewRoot root, object d)
         {
-            rootPanel = root == null ? GetComponent<UIPanel>() : root;
+            rootUIViewRoot = root == null ? GetComponent<UIViewRoot>() : root;
 
             if ( d == null )
             {
@@ -171,7 +171,7 @@ namespace UuIiView
                 }
 
                 if (uiSetter.transform == gameObject.transform) return;
-                uiSetter.GetComponent<UIViewRoot>()?.InitInternal(rootPanel, obj, OnEvent);
+                uiSetter.GetComponent<UIViewRoot>()?.InitInternal(rootUIViewRoot, obj, OnEvent);
             }
             catch(Exception e)
             {
