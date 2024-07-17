@@ -199,7 +199,7 @@ namespace UuIiView
             updatedListKeys.Clear();
         }
 
-        public void Log()
+        public string Log()
         {
             StringBuilder sb = new ();
             sb.AppendLine("[contents]");
@@ -239,7 +239,7 @@ namespace UuIiView
                 sb.AppendLine(key);
             }
 
-            Debug.Log(sb.ToString());
+            return sb.ToString();
         }
     }
 }

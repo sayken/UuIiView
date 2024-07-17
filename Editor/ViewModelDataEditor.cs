@@ -23,6 +23,8 @@ namespace UuIiView
         int selectedIndex = 0;
 
         bool prepared = false;
+        string log = string.Empty;
+        private Vector2 scrollPosition = Vector2.zero;
 
         private void OnGUI()
         {
@@ -47,13 +49,18 @@ namespace UuIiView
             if ( GUILayout.Button("Show Repository") )
             {
                 var presenter = (ReactivePresenter)dispatcher.GetPresenter(uiPanelNames[selectedIndex]);
-                presenter.ViewModel.Log();
+                log = presenter.ViewModel.Log();
 
                 // string cmd = uiPanelNames[selectedIndex] +"/Log/None/ShowLog/ParentName/Id";
                 // dispatcher.Dispatch(new CommandLink(cmd));
             }
             EditorGUILayout.EndHorizontal();
+
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+            GUILayout.Label(log);
+            EditorGUILayout.EndScrollView();
         }
+
 
         void OnFocus()
         {
