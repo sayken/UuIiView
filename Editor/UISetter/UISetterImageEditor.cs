@@ -1,32 +1,37 @@
 using UnityEngine.U2D;
 using UnityEditor;
-using UuIiView;
 
-[CustomEditor(typeof(UISetterImage))]
-public class UISetterImageEditor : InspectorEditor
+namespace UuIiView
 {
-    private void OnEnable()
+    [CustomEditor(typeof(UISetterImage))]
+    public class UISetterImageEditor : InspectorEditor
     {
-        Add(
-            nameof(UISetterImage.spriteHolder),
-            nameof(UISetterImage.atlas),
-            nameof(UISetterImage.loadFrom)
-        );
-    }
-
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        UISetterImage setter = target as UISetterImage;
-
-        if (setter.loadFrom == UISetterImage.LoadFrom.SpriteHolder)
+        private void OnEnable()
         {
-            prop["spriteHolder"].objectReferenceValue = (SpriteHolder)EditorGUILayout.ObjectField("Sprite Holder", setter.spriteHolder, typeof(SpriteHolder), true);
+            Add(
+                nameof(UISetterImage.spriteHolder),
+                nameof(UISetterImage.atlas)
+            );
         }
-        else if ( setter.loadFrom == UISetterImage.LoadFrom.SpriteAtlas)
+
+        public override void OnInspectorGUI()
         {
-            prop["atlas"].objectReferenceValue = (SpriteAtlas)EditorGUILayout.ObjectField("Sprite Atlas", setter.atlas, typeof(SpriteAtlas), true); ;
+            base.OnInspectorGUI();
+
+            UISetterImage setter = target as UISetterImage;
+
+            serializedObject.Update();
+
+            if (setter.loadFrom == UISetterImage.LoadFrom.SpriteHolder)
+            {
+                prop["spriteHolder"].objectReferenceValue = (SpriteHolder)EditorGUILayout.ObjectField("Sprite Holder", setter.spriteHolder, typeof(SpriteHolder), true);
+            }
+            else if ( setter.loadFrom == UISetterImage.LoadFrom.SpriteAtlas)
+            {
+                prop["atlas"].objectReferenceValue = (SpriteAtlas)EditorGUILayout.ObjectField("Sprite Atlas", setter.atlas, typeof(SpriteAtlas), true);
+            }
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

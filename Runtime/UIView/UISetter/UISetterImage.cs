@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UuIiView;
 using System.Linq;
 using UnityEngine.U2D;
 
