@@ -46,7 +46,7 @@ namespace UuIiView
                 onClickEvent = () =>
                 {
                     IsOn = !IsOn;
-                    viewRoot.ReceiveEvent(gameObject.name, EventType.Toggle, actionType, parentName, IsOn);
+                    viewRoot.ReceiveEvent(viewRoot.gameObject.name, gameObject.name, EventType.Toggle, actionType, parentName, IsOn);
                 };
             }
             onLongTapEvent = () => { };
@@ -59,7 +59,7 @@ namespace UuIiView
 
         public void TriggerEvent()
         {
-            viewRoot.ReceiveEvent(gameObject.name, EventType.Toggle, actionType, parentName, IsOn);
+            viewRoot.ReceiveEvent(viewRoot.gameObject.name, gameObject.name, EventType.Toggle, actionType, parentName, IsOn);
         }
     }
 }

@@ -67,7 +67,17 @@ namespace UuIiView
             switch (uiType)
             {
                 case UIType.Text:
-                    GetComponent<TextMeshProUGUI>().text = obj.ToString();
+                    var tmpro = GetComponent<TextMeshProUGUI>();
+                    if ( tmpro != null )
+                    {
+                        tmpro.text = obj.ToString();
+                        break;
+                    }
+                    var txt = GetComponent<Text>();
+                    if ( txt != null )
+                    {
+                        txt.text = obj.ToString();
+                    }
                     break;
                 case UIType.Image:
                     var resReq = Resources.LoadAsync<Sprite>(obj.ToString());

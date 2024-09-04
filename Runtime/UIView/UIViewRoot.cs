@@ -84,17 +84,17 @@ namespace UuIiView
                     }
                 }
 
-                commandLink.Append( eventType switch
-                {
-                    EventType.Input => "/Input=" + data.ToString(),
-                    EventType.Slider => "/Slider=" + data.ToString(),
-                    EventType.Toggle => "/Toggle=" + isOn,
-                    _ => ""
-                });
-
                 // 名前の最後にIdが付くものは、パラメータとしてCommandLinkに追加
                 dic.Where(_=>_.Key!="Id" && _.Key.EndsWith("Id")).ToList().ForEach(kv=>commandLink.Append($"/{kv.Key}={kv.Value}"));
             }
+
+            commandLink.Append( eventType switch
+            {
+                EventType.Input => "/Input=" + data.ToString(),
+                EventType.Slider => "/Slider=" + data.ToString(),
+                EventType.Toggle => "/Toggle=" + isOn,
+                _ => ""
+            });
 
             OnEvent?.Invoke(commandLink.ToString());
         }

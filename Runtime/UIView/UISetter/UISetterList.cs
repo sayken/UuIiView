@@ -6,7 +6,7 @@ namespace UuIiView
 {
     public class UISetterList : UISetter
     {
-        private UIPanel uiPanelRoot;
+        private UIViewRoot uiViewRoot;
         [SerializeField] private UIViewRoot cellPrefab;
         [SerializeField] private Transform listRoot;
         [SerializeField] string itemName;
@@ -26,7 +26,7 @@ namespace UuIiView
                 }
             }
 
-            uiPanelRoot = GetComponentInParent<UIPanel>();
+            uiViewRoot = GetComponentInParent<UIViewRoot>();
 
             for (int i = itemCells.Count; i < dataList.Count; i++)
             {
@@ -38,7 +38,7 @@ namespace UuIiView
             {
                 if (dataList.Count > i)
                 {
-                    itemCells[i].Init(uiPanelRoot.ViewRoot, dataList[i]);
+                    itemCells[i].Init(uiViewRoot, dataList[i]);
                     itemCells[i].gameObject.SetActive(true);
                 }
                 else

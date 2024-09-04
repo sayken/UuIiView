@@ -48,5 +48,14 @@ namespace UuIiView
                 toggle.IsOn = false;
             }
         }
+
+        public void SelectToggle(int idx = 0)
+        {
+            if ( idx < 0 || customToggles.Count <= idx )
+            {
+                idx = 0;
+            }
+            On(customToggles[idx], true);
+        }
     }
 }
