@@ -12,6 +12,8 @@ namespace UuIiView
                 nameof(CustomToggle.selected),
                 nameof(CustomToggle.disabled),
                 nameof(CustomToggle.isOn),
+                nameof(CustomToggle.targetPanelName),
+                nameof(CustomToggle.closeGroupName),
                 nameof(CustomToggle.parentName)
             );
         }
