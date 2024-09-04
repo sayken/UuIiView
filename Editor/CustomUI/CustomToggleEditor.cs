@@ -23,6 +23,15 @@ namespace UuIiView
             DrawDefaultInspector();
 
             serializedObject.Update();
+            if ( ts.actionType == ActionType.Open || ts.actionType == ActionType.CloseAndOpen || ts.actionType == ActionType.CloseGroupAndOpen || ts.actionType == ActionType.ActionToPanel)
+            {
+                prop["targetPanelName"].stringValue = EditorGUILayout.TextField("Target Panel Name", prop["targetPanelName"].stringValue);
+            }
+            if ( ts.actionType == ActionType.CloseGroupAndOpen )
+            {
+                prop["closeGroupName"].stringValue = EditorGUILayout.TextField("Close Group Name", prop["closeGroupName"].stringValue);
+            }
+
             prop["isOn"].boolValue = EditorGUILayout.Toggle("isOn", prop["isOn"].boolValue);
             prop["interactable"].boolValue = EditorGUILayout.Toggle("interactable", prop["interactable"].boolValue);
             bool modified = serializedObject.hasModifiedProperties;
