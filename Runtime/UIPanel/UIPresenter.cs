@@ -33,7 +33,10 @@ namespace UuIiView
         protected virtual void Close(Action onClose = null)
         {
             onClose?.Invoke();
-            uiPanel.Close();
+            if ( uiPanel != null)
+            {
+                uiPanel.Close();
+            }
         }
 
 
