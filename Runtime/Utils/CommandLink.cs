@@ -34,6 +34,11 @@ namespace UuIiView
 
         public override string ToString() => source;
 
+        public static CommandLink CreateOpen(string panelName, string id = "")
+        {
+            return new CommandLink($"{panelName}/{UuIiView.EventType.Button}/{UuIiView.ActionType.Open}/EventName/ParentName/{id}");
+        }
+
         public string Log()
         {
             var paramStr = "";
