@@ -40,8 +40,7 @@ namespace UuIiView
         private object data;
         private List<UISetter> uiSetters;
 
-
-        private UIViewRoot rootUIViewRoot;
+        public UIViewRoot RootUIViewRoot { get; private set;}
         public Action<string> OnEvent { get; private set; }
 
 
@@ -64,7 +63,7 @@ namespace UuIiView
         public void ReceiveEvent(string targetPanelName, string name, EventType type, ActionType actType, string parentName, bool isOn = true)
             => ReceiveEventInternal(targetPanelName, name, type, actType, parentName, data, isOn);
         public void ReceiveEvent(string name, EventType type, ActionType actType, string parentName, bool isOn = true)
-            => ReceiveEventInternal(rootUIViewRoot.gameObject.name, name, type, actType, parentName, data, isOn);
+            => ReceiveEventInternal(RootUIViewRoot.gameObject.name, name, type, actType, parentName, data, isOn);
 
         // イベントを受け取ってCommandLinkに変換
         void ReceiveEventInternal(string panelName, string name, EventType eventType, ActionType actionType, string parentName, object data, bool isOn)
@@ -110,7 +109,8 @@ namespace UuIiView
         public void SetData(object d) => SetData(null, d);
         public void SetData(UIViewRoot root, object d)
         {
-            rootUIViewRoot = root == null ? GetComponent<UIViewRoot>() : root;
+            RootUIViewRoot = root == null ? GetComponent<UIViewRoot>() : root;
+            rootViewRootName = RootUIViewRoot.gameObject.name;
 
             if ( d == null )
             {
@@ -171,7 +171,7 @@ namespace UuIiView
                 }
 
                 if (uiSetter.transform == gameObject.transform) return;
-                uiSetter.GetComponent<UIViewRoot>()?.InitInternal(rootUIViewRoot, obj, OnEvent);
+                uiSetter.GetComponent<UIViewRoot>()?.InitInternal(RootUIViewRoot, obj, OnEvent);
             }
             catch(Exception e)
             {

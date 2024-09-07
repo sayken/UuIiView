@@ -38,7 +38,7 @@ namespace UuIiView
             {
                 if (dataList.Count > i)
                 {
-                    itemCells[i].Init(uiViewRoot, dataList[i]);
+                    itemCells[i].Init(uiViewRoot.RootUIViewRoot, dataList[i]);
                     itemCells[i].gameObject.SetActive(true);
                 }
                 else
