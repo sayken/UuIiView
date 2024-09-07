@@ -110,8 +110,7 @@ namespace UuIiView
         public void SetData(UIViewRoot root, object d)
         {
             RootUIViewRoot = root == null ? GetComponent<UIViewRoot>() : root;
-            rootViewRootName = RootUIViewRoot.gameObject.name;
-
+            
             if ( d == null )
             {
                 return;
