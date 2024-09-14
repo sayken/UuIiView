@@ -27,6 +27,11 @@ namespace UuIiView
             var result = new Dictionary<string,object>();
             foreach ( var kv in data )
             {
+                if ( kv.Value == null )
+                {
+                    Debug.LogError($"{kv.Key} value is null");
+                    continue;
+                }
                 if (kv.Value.GetType() == typeof(JArray) )
                 {
                     List<IDictionary<string,object>> objs = new ();
