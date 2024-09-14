@@ -48,6 +48,7 @@ namespace UuIiView
 
         protected void PassToDispatcher(CommandLink cmd) => dispatcher.Dispatch(cmd);
 
+        protected IPresenter GetPresenter(string name) => dispatcher.GetPresenter(name);
 
         /// ========================================================================
         /// Event
