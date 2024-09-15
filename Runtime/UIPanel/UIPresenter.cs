@@ -10,6 +10,11 @@ namespace UuIiView
 
         protected Model model;
 
+        // protected Action onPanelOpen;
+        // protected Action onPanelClose;
+        protected Action onOpen;
+        protected Action onClose;
+
         public UIPresenter(Dispatcher dispatcher, string panelName, Model model)
         {
             this.dispatcher = dispatcher;
@@ -20,17 +25,20 @@ namespace UuIiView
         /// ========================================================================
         /// Open, Close
         /// ========================================================================
-        protected virtual UIPanel Open(Action onOpen = null)
+        protected virtual UIPanel Open(Action onPanelOpen = null, Action onPanelClose = null)
         {
             if ( uiPanel == null )
             {
                 uiPanel = UILayer.Inst.AddPanel(PanelName);
             }
-            uiPanel.OnOpen = onOpen;
+            uiPanel.OnOpen = onPanelOpen;
+            uiPanel.OnClose = onPanelClose;
+
+            onOpen?.Invoke();
             return uiPanel.Open(PassToDispatcher);
         }
 
-        protected virtual void Close(Action onClose = null)
+        protected virtual void Close()
         {
             onClose?.Invoke();
             if ( uiPanel != null)

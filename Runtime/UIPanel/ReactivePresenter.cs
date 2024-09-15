@@ -13,17 +13,15 @@ namespace UuIiView
             viewModel = new ViewModel(Bind);
         }
 
-        protected override UIPanel Open(Action onOpen = null)
+        protected override UIPanel Open(Action onOpen = null, Action onClose = null)
         {
-            base.Open(onOpen);
-            uiPanel.OnClose = ()=>{ClearBind();};
+            base.Open(null, ()=>{ClearBind();});
             return uiPanel;
         }
 
-        protected override void Close(Action onClose = null)
+        protected override void Close()
         {
-            base.Close(onClose);
-            ClearBind();
+            base.Close();
         }
 
         public override void OnEvent(CommandLink commandLink)
@@ -36,7 +34,6 @@ namespace UuIiView
                     break;
                 case UuIiView.ActionType.Close:
                     Close();
-                    
                     break;
                 case UuIiView.ActionType.DataSync:
                     DataSync(commandLink);

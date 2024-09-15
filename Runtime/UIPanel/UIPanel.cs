@@ -40,18 +40,18 @@ namespace UuIiView
             transition = GetComponent<ITransition>();
             if (transition != null)
             {
-                transition.TransitionIn(() => OpenCompleted(this.OnOpen));
+                transition.TransitionIn(() => OpenCompleted());
             }
             else
             {
-                OpenCompleted(OnOpen);
+                OpenCompleted();
             }
             return this;
         }
 
-        void OpenCompleted(Action onOpen)
+        void OpenCompleted()
         {
-            onOpen?.Invoke();
+            OnOpen?.Invoke();
             UILayer.Inst.TapLock(false);
             isOpened = true;
         }
