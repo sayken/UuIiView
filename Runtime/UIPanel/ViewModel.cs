@@ -134,8 +134,10 @@ namespace UuIiView
             return null;
         }
 
-
-
+        public string GetJson()
+        {
+            return JsonConvert.SerializeObject(data);
+        }
 
         /// <summary>
         /// 値を更新する
