@@ -8,12 +8,14 @@ namespace UuIiView
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class UISetterText : UISetter
     {
+        public const double TimeSpanLimit = -9999; // TimeSpan選択時に、この秒数の時はunderLimitFormatの書式が表示される
         public enum FormatType
         {
             None,
             DateTime,
             Numeric,
             Custom,
+            TimeSpan,
         }
 
         // 日付フォーマット。スラッシュ区切りの日付フォーマットはここでは指定できないので、FormatType.Customを使う
@@ -81,6 +83,22 @@ namespace UuIiView
                 {
                     var datetime = new DateTime((long)obj);
                     textUI.text = datetime.ToString(dateFormat[dateTimeFormat]);
+                }
+            }
+            else if ( formatType == FormatType.TimeSpan)
+            {
+                if ( obj.GetType() == typeof(double) )
+                {
+                    var remainSec = (double)obj;
+                    if ( remainSec <= TimeSpanLimit )
+                    {
+                        textUI.text = string.Format(underLimitFormat, remainSec);
+                    }
+                    else
+                    {
+                        var ts = TimeSpan.FromSeconds(remainSec);
+                        textUI.text = ts.ToString(@"mm\:ss");
+                    }
                 }
             }
             else if (formatType == FormatType.Numeric)

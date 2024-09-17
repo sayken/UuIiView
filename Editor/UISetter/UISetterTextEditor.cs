@@ -74,6 +74,14 @@ namespace UuIiView
                         prop["format"].stringValue = EditorGUILayout.TextField("Format", setter.format);
                     }
                     break;
+                case UISetterText.FormatType.TimeSpan:
+                    // 日付のフォーマットで表示
+                    {
+                        prop["dateTimeFormat"].intValue = EditorGUILayout.Popup("Format", setter.dateTimeFormat, UISetterText.dateFormat);
+                        prop["underLimitFormat"].stringValue = EditorGUILayout.TextField("UnderLimitFormat", setter.underLimitFormat);
+                    }
+                    break;
+
             }
         
             serializedObject.ApplyModifiedProperties();
