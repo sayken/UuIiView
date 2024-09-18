@@ -71,7 +71,9 @@ namespace UuIiView
             {
                 case UuIiView.ActionType.Open:
                     Open();
-                    uiPanel.UpdateData(GetInitData(commandLink));
+                    GetInitData(commandLink, (json)=>{
+                        uiPanel.UpdateData(json);
+                    });
                     break;
                 case UuIiView.ActionType.Close:
                     Close();
@@ -81,9 +83,9 @@ namespace UuIiView
             }
         }
 
-        protected virtual string GetInitData(CommandLink commandLink)
+        protected virtual void GetInitData(CommandLink commandLink, Action<string> onCompleted)
         {
-            return "{}";
+            onCompleted.Invoke("{}");
         }
     }
 }

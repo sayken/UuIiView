@@ -30,7 +30,9 @@ namespace UuIiView
             {
                 case UuIiView.ActionType.Open:
                     Open();
-                    viewModel.Init(GetInitData(commandLink));
+                    GetInitData(commandLink, (json)=>{
+                        viewModel.Init(json);
+                    });
                     break;
                 case UuIiView.ActionType.Close:
                     Close();
