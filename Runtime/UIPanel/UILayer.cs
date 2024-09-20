@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 namespace UuIiView
 {
@@ -165,17 +166,21 @@ namespace UuIiView
             return true;
         }
 
+        public void CloseByLayer(Action onCompleted, params string[] layerNames)
+        {
+            StartCoroutine(_CloseByLayer(onCompleted, layerNames));
+        }
         public void CloseByLayer(params string[] layerNames)
         {
-            StartCoroutine(_CloseByLayer(layerNames));
+            CloseByLayer(null, layerNames);
         }
 
-        public void CloseAllLayers()
+        public void CloseAllLayers(Action onCompleted=null)
         {
-            StartCoroutine(_CloseByLayer(layerType.ToArray()));
+            StartCoroutine(_CloseByLayer(onCompleted, layerType.ToArray()));
         }
 
-        public IEnumerator _CloseByLayer(params string[] layerNames)
+        private IEnumerator _CloseByLayer(Action onCompleted, params string[] layerNames)
         {
             yield return null;
             foreach ( var layerName in layerNames )
@@ -186,6 +191,7 @@ namespace UuIiView
                     panel.Close();
                 }
             }
+            onCompleted?.Invoke();
         }
 
         public bool IsTapLock => tapLock.activeSelf;
