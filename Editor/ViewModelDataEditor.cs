@@ -18,7 +18,7 @@ namespace UuIiView
         }
 
         GameObject canvasRoot;
-        Dispatcher dispatcher;
+        Router router;
         string[] uiPanelNames;
         int selectedIndex = 0;
 
@@ -48,11 +48,11 @@ namespace UuIiView
 
             if ( GUILayout.Button("Show Repository") )
             {
-                var presenter = (ReactivePresenter)dispatcher.GetPresenter(uiPanelNames[selectedIndex]);
+                var presenter = (ReactivePresenter)router.GetPresenter(uiPanelNames[selectedIndex]);
                 log = presenter.ViewModel.Log();
 
                 // string cmd = uiPanelNames[selectedIndex] +"/Log/None/ShowLog/ParentName/Id";
-                // dispatcher.Dispatch(new CommandLink(cmd));
+                // router.Dispatch(new CommandLink(cmd));
             }
             EditorGUILayout.EndHorizontal();
 
@@ -72,16 +72,16 @@ namespace UuIiView
         bool Prepare()
         {
             if ( canvasRoot == null ) canvasRoot = GameObject.Find("CanvasRoot");
-            if ( dispatcher == null ) dispatcher = GameObject.Find("LayerController").GetComponent<Dispatcher>();
+            if ( router == null ) router = GameObject.Find("LayerController").GetComponent<Router>();
 
             if ( canvasRoot == null )
             {
                 Debug.LogError("CanvasRootが見つかりません");
                 return false;
             }
-            if ( dispatcher == null )
+            if ( router == null )
             {
-                Debug.LogError("Dispatcherが見つかりません");
+                Debug.LogError("Routerが見つかりません");
                 return false;
             }
 

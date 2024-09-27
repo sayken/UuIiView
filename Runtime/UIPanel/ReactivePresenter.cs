@@ -8,7 +8,7 @@ namespace UuIiView
         protected ViewModel viewModel;
         public ViewModel ViewModel => viewModel;
 
-        public ReactivePresenter(Dispatcher dispatcher, string panelName, Model model) : base(dispatcher, panelName, model)
+        public ReactivePresenter(Router router, string panelName, Model model) : base(router, panelName, model)
         {
             viewModel = new ViewModel(Bind);
         }

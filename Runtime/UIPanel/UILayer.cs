@@ -21,7 +21,7 @@ namespace UuIiView
 
         Dictionary<string, UIPanel> panelCaches = new Dictionary<string, UIPanel>();
 
-        public Dispatcher Dispatcher { get; private set; }
+        public Router Router { get; private set; }
 
         public void Initialize(UIPanelData uiPanelData)
         {
@@ -54,8 +54,8 @@ namespace UuIiView
 
             TapLock(false);
 
-            Dispatcher = GetComponent<Dispatcher>();
-            if ( Dispatcher == null ) Dispatcher = gameObject.AddComponent<Dispatcher>();
+            Router = GetComponent<Router>();
+            if ( Router == null ) Router = gameObject.AddComponent<Router>();
 
             var eventSystem = GetComponent<EventSystem>();
             if ( eventSystem == null ) gameObject.AddComponent<EventSystem>();

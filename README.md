@@ -58,7 +58,7 @@ UIで発生したEventは、UIViewRoot.SetReceiver() に Action<string> を渡�
 ![画像2](https://github.com/sayken/UuIiView/assets/6512883/ccb7abbd-ec2a-430f-9594-0ead78a43c74)
 
 UI内でEventが発生すると、Presenterの上位にあるDispatherに通知されます。  
-Dispatcherは渡されたCommandLinkから、処理対象のPresenterを判定しOnEventを呼び出します。
+Routerは渡されたCommandLinkから、処理対象のPresenterを判定しOnEventを呼び出します。
 
 ## UIPanelSettings
 ![画像3](https://github.com/sayken/UuIiView/assets/6512883/52c6e7dc-219d-4d0e-b464-be30a09fe82b)

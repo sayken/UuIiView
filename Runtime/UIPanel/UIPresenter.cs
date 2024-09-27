@@ -4,7 +4,7 @@ namespace UuIiView
 {
     public abstract class UIPresenter : IPresenter
     {
-        Dispatcher dispatcher;
+        Router router;
         protected string PanelName;
         protected UIPanel uiPanel;
 
@@ -15,9 +15,9 @@ namespace UuIiView
         protected Action onOpen;
         protected Action onClose;
 
-        public UIPresenter(Dispatcher dispatcher, string panelName, Model model)
+        public UIPresenter(Router router, string panelName, Model model)
         {
-            this.dispatcher = dispatcher;
+            this.router = router;
             PanelName = panelName;
             this.model = model;
         }
@@ -35,7 +35,7 @@ namespace UuIiView
             uiPanel.OnClose = onPanelClose;
 
             onOpen?.Invoke();
-            return uiPanel.Open(PassToDispatcher);
+            return uiPanel.Open(PassToRouter);
         }
 
         protected virtual void Close()
@@ -49,14 +49,14 @@ namespace UuIiView
 
 
         /// ========================================================================
-        /// Pass CommandLink to Dispatcher
+        /// Pass CommandLink to Router
         /// ========================================================================
 
-        void PassToDispatcher(string path) => PassToDispatcher(new CommandLink(path));
+        void PassToRouter(string path) => PassToRouter(new CommandLink(path));
 
-        protected void PassToDispatcher(CommandLink cmd) => dispatcher.Dispatch(cmd);
+        protected void PassToRouter(CommandLink cmd) => router.Routing(cmd);
 
-        protected IPresenter GetPresenter(string name) => dispatcher.GetPresenter(name);
+        protected IPresenter GetPresenter(string name) => router.GetPresenter(name);
 
         /// ========================================================================
         /// Event

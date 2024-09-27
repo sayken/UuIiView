@@ -5,7 +5,7 @@ using System;
 namespace UuIiView
 {
     [RequireComponent(typeof(UILayer))]
-    public class Dispatcher : MonoBehaviour
+    public class Router : MonoBehaviour
     {
         // 全Presenterのインスタンスを保持
         public Dictionary<string, IPresenter> presenters { get; private set; }= new ();
@@ -20,7 +20,7 @@ namespace UuIiView
         /// <param name="model"></param>
         public void SetPresenter(string panelName, Type type, Model model)
         {
-            IPresenter obj = (IPresenter)Activator.CreateInstance(type, UILayer.Inst.Dispatcher, panelName, model);
+            IPresenter obj = (IPresenter)Activator.CreateInstance(type, UILayer.Inst.Router, panelName, model);
             presenters.Add(panelName, obj);
         }
 
@@ -37,7 +37,7 @@ namespace UuIiView
         public void SetGroupPresenter(Type type, UIGroup group, Model model)
         {
             // Debug.Log("Type = "+ type.ToString());
-            IGroupPresenter groupPresenter = (IGroupPresenter)Activator.CreateInstance(type, UILayer.Inst.Dispatcher, group.name, model);
+            IGroupPresenter groupPresenter = (IGroupPresenter)Activator.CreateInstance(type, UILayer.Inst.Router, group.name, model);
             foreach ( var panelName in group.panelNames)
             {
                 if ( !presenters.ContainsKey(panelName) )
@@ -54,7 +54,7 @@ namespace UuIiView
         /// 全てのEventを受け取って、処理対象のPresenterに処理を渡す
         /// </summary>
         /// <param name="cmd"></param>
-        public void Dispatch(CommandLink cmd)
+        public void Routing(CommandLink cmd)
         {
             Debug.Log(cmd.Log());
 

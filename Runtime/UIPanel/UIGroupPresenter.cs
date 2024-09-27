@@ -9,12 +9,12 @@ namespace UuIiView
     {
         public List<IPresenter> presenters {get; set; } = new ();
 
-        Dispatcher dispatcher;
+        Router router;
         protected Model model { get; private set; }
 
-        public UIGroupPresenter(Dispatcher dispatcher, string name, Model model)
+        public UIGroupPresenter(Router router, string name, Model model)
         {
-            this.dispatcher = dispatcher;
+            this.router = router;
             this.model = model;
         }
 
@@ -40,10 +40,10 @@ namespace UuIiView
         }
 
         /// ========================================================================
-        /// Pass CommandLink to Dispatcher
+        /// Pass CommandLink to Router
         /// ========================================================================
 
         
-        protected void PassToDispatcher(CommandLink cmd) => dispatcher.Dispatch(cmd);
+        protected void PassToRouter(CommandLink cmd) => router.Routing(cmd);
     }
 }
