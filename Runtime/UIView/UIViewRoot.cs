@@ -16,6 +16,7 @@ namespace UuIiView
         LongTap,
         Slider,
         Input,
+        DragAndDrop,
     }
 
     public enum ActionType
