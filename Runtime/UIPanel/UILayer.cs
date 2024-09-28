@@ -166,21 +166,17 @@ namespace UuIiView
             return true;
         }
 
-        public void CloseByLayer(Action onCompleted, params string[] layerNames)
-        {
-            StartCoroutine(_CloseByLayer(onCompleted, layerNames));
-        }
         public void CloseByLayer(params string[] layerNames)
         {
-            CloseByLayer(null, layerNames);
+            StartCoroutine(CloseByLayerInternal(layerNames));
         }
 
         public void CloseAllLayers(Action onCompleted=null)
         {
-            StartCoroutine(_CloseByLayer(onCompleted, layerType.ToArray()));
+            StartCoroutine(CloseByLayerInternal(layerType.ToArray()));
         }
 
-        private IEnumerator _CloseByLayer(Action onCompleted, params string[] layerNames)
+        private IEnumerator CloseByLayerInternal(params string[] layerNames)
         {
             yield return null;
             foreach ( var layerName in layerNames )
@@ -191,7 +187,6 @@ namespace UuIiView
                     panel.Close();
                 }
             }
-            onCompleted?.Invoke();
         }
 
         public bool IsTapLock => tapLock.activeSelf;
