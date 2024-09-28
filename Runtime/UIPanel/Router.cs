@@ -70,6 +70,15 @@ namespace UuIiView
             }
         }
 
+        public IScene CurrentScene;
+
+        public void RouteToScene(CommandLink cmd)
+        {
+            Debug.Log(cmd.Log(true));
+
+            CurrentScene?.OnEvent(cmd);
+        }
+
 
         public void Log()
         {

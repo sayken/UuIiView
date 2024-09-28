@@ -58,6 +58,8 @@ namespace UuIiView
 
         protected IPresenter GetPresenter(string name) => router.GetPresenter(name);
 
+        protected void PassToScene(CommandLink cmd) => router.RouteToScene(cmd);
+
         /// ========================================================================
         /// Event
         /// ========================================================================

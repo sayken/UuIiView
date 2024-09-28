@@ -13,6 +13,7 @@ namespace UuIiView
         UIPanelData uiPanelData;
         public List<string> layerType = new List<string>();
         Dictionary<string, RectTransform> layerContent = new Dictionary<string, RectTransform>();
+        Dictionary<string,int> layerCount = new Dictionary<string,int>();
         GameObject canvasRoot;
 
         GameObject blind;
@@ -37,6 +38,7 @@ namespace UuIiView
             foreach ( Transform _ in canvasRoot.transform )
             {
                 layerContent[_.name] = _.Find("Content").GetComponent<RectTransform>();
+                layerCount[_.name] = 0;
                 layerType.Add(_.name);
             }
 
@@ -102,12 +104,12 @@ namespace UuIiView
         {
             if (!reservedSort && gameObject.activeSelf )
             {
-                StartCoroutine(_SortPanel());
+                StartCoroutine(SortPanelInternal());
                 reservedSort = true;
             }
         }
 
-        IEnumerator _SortPanel()
+        IEnumerator SortPanelInternal()
         {
             yield return new WaitForEndOfFrame();
 
@@ -117,6 +119,7 @@ namespace UuIiView
             {
                 int idx = 0;
                 var panels = layerContent[layerType[i]].GetComponentsInChildren<UIPanel>().OrderBy(_ => _.transform.GetSiblingIndex());
+                layerCount[layerType[i]] = panels.Count();
                 foreach ( var panel in  panels)
                 {
                     var info = uiPanelData.panels.FirstOrDefault(_ => _.name == panel.name);
@@ -168,15 +171,19 @@ namespace UuIiView
 
         public void CloseByLayer(params string[] layerNames)
         {
-            StartCoroutine(CloseByLayerInternal(layerNames));
+            StartCoroutine(CloseByLayerInternal(null, layerNames));
+        }
+        public void CloseByLayer(Action onCompleted, params string[] layerNames)
+        {
+            StartCoroutine(CloseByLayerInternal(onCompleted, layerNames));
         }
 
         public void CloseAllLayers(Action onCompleted=null)
         {
-            StartCoroutine(CloseByLayerInternal(layerType.ToArray()));
+            StartCoroutine(CloseByLayerInternal(onCompleted, layerType.ToArray()));
         }
 
-        private IEnumerator CloseByLayerInternal(params string[] layerNames)
+        private IEnumerator CloseByLayerInternal(Action onCompleted, params string[] layerNames)
         {
             yield return null;
             foreach ( var layerName in layerNames )
@@ -187,6 +194,17 @@ namespace UuIiView
                     panel.Close();
                 }
             }
+
+            if ( onCompleted != null )
+            {
+                yield return new WaitWhile(()=>IsLayerClosedAll(layerNames));
+                onCompleted.Invoke();
+            }
+        }
+
+        public bool IsLayerClosedAll(params string[] layerNames)
+        {
+            return layerCount.Any(x=>layerNames.Contains(x.Key) && x.Value>0);
         }
 
         public bool IsTapLock => tapLock.activeSelf;

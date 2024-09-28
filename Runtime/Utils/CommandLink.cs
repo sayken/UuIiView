@@ -13,6 +13,17 @@ namespace UuIiView
         public string ParentName;
         public Dictionary<string, string> param;
         string source = string.Empty;
+
+        /// <summary>
+        /// 以下の順番で/（スラッシュ）区切り
+        /// 0. (string) TargetName
+        /// 1. (Enum)   EventType
+        /// 2. (Enum)   ActionType
+        /// 3. (string) EventName
+        /// 4. (string) ParentName
+        /// 5. (string) Id
+        /// </summary>
+        /// <param name="commandLink"></param>
         public CommandLink(string commandLink)
         {
             source = commandLink;
@@ -39,7 +50,7 @@ namespace UuIiView
             return new CommandLink($"{panelName}/{UuIiView.EventType.Button}/{UuIiView.ActionType.Open}/EventName/ParentName/{id}");
         }
 
-        public string Log()
+        public string Log(bool isScene = false)
         {
             var paramStr = "";
             foreach (var kv in param)
@@ -49,7 +60,9 @@ namespace UuIiView
             if (paramStr.Length > 0)
                 paramStr = paramStr.Substring(1);
 
-            return ($"<color=cyan>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : ActionType={ActionType} : ParentName={ParentName} : param=({paramStr})</color>\n{this.ToString()}");
+            var colorStr = isScene ? "#009999" : "cyan";
+
+            return ($"<color={colorStr}>[UuIiView] CommandLink (Id = {Id} : PanelName={PanelName} : EventName={EventName} : EventType={EventType} : ActionType={ActionType} : ParentName={ParentName} : param=({paramStr})</color>\n{this.ToString()}");
         }
     }
 }
