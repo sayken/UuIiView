@@ -45,9 +45,9 @@ namespace UuIiView
 
         public override string ToString() => source;
 
-        public static CommandLink CreateOpen(string panelName, string id = "")
+        public static CommandLink CreateOpen(Enum panel, string id = "")
         {
-            return new CommandLink($"{panelName}/{UuIiView.EventType.Button}/{UuIiView.ActionType.Open}/EventName/ParentName/{id}");
+            return new CommandLink($"{panel}/{UuIiView.EventType.Button}/{UuIiView.ActionType.Open}/EventName/ParentName/{id}");
         }
 
         public string Log(bool isScene = false)
