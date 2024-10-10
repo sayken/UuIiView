@@ -35,11 +35,16 @@ namespace UuIiView
             canvasRoot = cr == null ? Instantiate(uiPanelData.canvasRoot, transform) : cr.gameObject;
             canvasRoot.name = "CanvasRoot";
 
-            foreach ( Transform _ in canvasRoot.transform )
+            foreach ( Transform ts in canvasRoot.transform )
             {
-                layerContent[_.name] = _.Find("Content").GetComponent<RectTransform>();
-                layerCount[_.name] = 0;
-                layerType.Add(_.name);
+                var content = ts.Find("Content");
+                if ( content == null )
+                {
+                    continue;
+                }
+                layerContent[ts.name] = content.GetComponent<RectTransform>();
+                layerCount[ts.name] = 0;
+                layerType.Add(ts.name);
             }
 
             tapLock = canvasRoot.GetComponentsInChildren<Transform>(true).FirstOrDefault(_ => _.gameObject.name == "TapLock").gameObject;
