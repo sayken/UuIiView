@@ -62,10 +62,10 @@ namespace UuIiView
 
         private void OnGUI()
         {
-            float wm = Screen.width * 0.2f;
-            float wl = Screen.width * 0.3f;
-            float ws = Screen.width * 0.12f;
-            float wt = Screen.width * 0.05f;
+            float wm = position.width * 0.2f;
+            float wl = position.width * 0.3f;
+            float ws = position.width * 0.12f;
+            float wt = position.width * 0.05f;
 
             if (normalStyle == null) DefaultStyle();
             if (warningStyle == null) WarningStyle();
@@ -144,7 +144,7 @@ namespace UuIiView
 
             if (layerType == null || layerType.Length == 0 || supportSafeArea == null || supportSafeArea.Length == 0)
             {
-                EditorGUILayout.LabelField("UIPanelData に CanvasRoot がセットされているか確認してください。", GUILayout.Width(Screen.width));
+                EditorGUILayout.LabelField("UIPanelData に CanvasRoot がセットされているか確認してください。", GUILayout.Width(position.width));
             }
             else
             {
@@ -198,7 +198,7 @@ namespace UuIiView
                 }
 
                 // ===== UIPanelの情報 =======================================================================
-                float stretchWidth = Screen.width - wm - ws - ws - wt - wt - 40;// 40は右側に隙間を開けるmargin
+                float stretchWidth = position.width - wm - ws - ws - wt - wt - 40;// 40は右側に隙間を開けるmargin
 
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Box("UI Panel Name", normalBoxStyle, GUILayout.Width(wm));
