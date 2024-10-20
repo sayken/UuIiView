@@ -201,7 +201,7 @@ namespace UuIiView
 
         public void Clear()
         {
-            data.Clear();
+            data?.Clear();
             updatedKeys.Clear();
             updatedListKeys.Clear();
         }
