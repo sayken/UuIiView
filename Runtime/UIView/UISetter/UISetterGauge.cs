@@ -22,6 +22,6 @@ public class UISetterGauge : UISetter
         }
 
         double value = (double)obj;
-        image.fillAmount = (float)value;
+        Image.fillAmount = (float)value;
     }
 }
