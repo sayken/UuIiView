@@ -36,7 +36,11 @@ namespace UuIiView
         {
             string path = string.Empty;
 
-            if (obj.ToString().StartsWith("{"))
+            if ( obj == null )
+            {
+                return;
+            }
+            else if (obj.ToString().StartsWith("{"))
             {
                 // 2つ以上のパラメータがある
                 var dict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(obj.ToString());
@@ -58,6 +62,11 @@ namespace UuIiView
 
             if( string.IsNullOrEmpty(path) )
             {
+                return;
+            }
+            else if ( bool.TryParse(path, out var activeSelf))
+            {
+                gameObject.SetActive(activeSelf);
                 return;
             }
 
