@@ -19,7 +19,6 @@ namespace UuIiView
         {
             var window = EditorWindow.GetWindow<UIPanelDataSettings>(typeof(SceneView));
             Texture icon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Packages/UuIiView/Editor/Icons/icon.png");
-            savePath = EditorPrefs.GetString(SaveEnumPathKey, "Assets");
             window.titleContent = new GUIContent(" UIPanelData Settings", icon);
         }
 
@@ -371,6 +370,8 @@ namespace UuIiView
                 sb.Append("\t").Append(name).AppendLine(",");
             }
             sb.AppendLine("}");
+
+            savePath = EditorPrefs.GetString(SaveEnumPathKey, "Assets");
 
             // ファイル書き出し
             var path = EditorUtility.SaveFilePanel("Save Enum", savePath, "UIEnum", "cs");
