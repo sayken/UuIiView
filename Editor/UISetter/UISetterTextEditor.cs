@@ -60,6 +60,7 @@ namespace UuIiView
                             prop["min"].intValue = EditorGUILayout.IntField("Min", setter.min);
                             prop["max"].intValue = EditorGUILayout.IntField("Max", setter.max);
                             prop["underLimitFormat"].stringValue = EditorGUILayout.TextField("UnderLimitFormat", setter.underLimitFormat);
+                            prop["format"].stringValue = EditorGUILayout.TextField("Format", setter.format);
                             prop["overLimitFormat"].stringValue = EditorGUILayout.TextField("OverLimitFormat", setter.overLimitFormat);
                         }
                         else

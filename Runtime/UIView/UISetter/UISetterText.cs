@@ -126,7 +126,7 @@ namespace UuIiView
                     }
 
                     // 最後にフォーマットがあれば、それを使う
-                    string fmt = string.Empty;
+                    string fmt = format;
                     if ( hasLimit )
                     {
                         if ( overLimit )
@@ -137,10 +137,6 @@ namespace UuIiView
                         {
                             fmt = underLimitFormat;
                         }
-                    }
-                    else
-                    {
-                        fmt = format;
                     }
                     
                     if ( !string.IsNullOrEmpty(fmt) )
