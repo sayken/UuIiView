@@ -87,7 +87,15 @@ namespace UuIiView
                     };
                     break;
                 case UIType.RawImage:
-                    StartCoroutine(SetTexture(obj.ToString()));
+                    if ( bool.TryParse( obj.ToString(), out bool b) )
+                    {
+                        gameObject.SetActive(b);
+                    }
+                    else
+                    {
+                        gameObject.SetActive(true);
+                        StartCoroutine(SetTexture(obj.ToString()));
+                    }
                     break;
                 case UIType.CustomButton:
                     GetComponent<CustomButton>().Interactable = (bool)obj;
@@ -122,13 +130,6 @@ namespace UuIiView
         // ===== For RawImage =============================================================================================
         IEnumerator SetTexture(string uri)
         {
-            if ( bool.TryParse( uri, out bool b) )
-            {
-                gameObject.SetActive(b);
-                yield break;
-            }
-            gameObject.SetActive(true);
-            
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(uri);
 
             //画像を取得できるまで待つ
