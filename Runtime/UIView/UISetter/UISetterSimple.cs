@@ -122,6 +122,13 @@ namespace UuIiView
         // ===== For RawImage =============================================================================================
         IEnumerator SetTexture(string uri)
         {
+            if ( bool.TryParse( uri, out bool b) )
+            {
+                gameObject.SetActive(b);
+                yield break;
+            }
+            gameObject.SetActive(true);
+            
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(uri);
 
             //画像を取得できるまで待つ
