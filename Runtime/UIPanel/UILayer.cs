@@ -24,6 +24,9 @@ namespace UuIiView
 
         public Router Router { get; private set; }
 
+        /// <summary>　Panelを閉じたとき、所属レイヤーが全て閉じられたら呼ばれる </summary>
+        public Action<string> OnAllClosed;
+
         public void Initialize(UIPanelData uiPanelData)
         {
             this.uiPanelData = uiPanelData;
@@ -105,16 +108,16 @@ namespace UuIiView
             return go;
         }
 
-        public void SortPanel()
+        public void SortPanel(string closedPanelName = "")
         {
             if (!reservedSort && gameObject.activeSelf )
             {
-                StartCoroutine(SortPanelInternal());
+                StartCoroutine(SortPanelInternal(closedPanelName));
                 reservedSort = true;
             }
         }
 
-        IEnumerator SortPanelInternal()
+        IEnumerator SortPanelInternal(string closedPanelName)
         {
             yield return new WaitForEndOfFrame();
 
@@ -153,6 +156,11 @@ namespace UuIiView
             }
 
             reservedSort = false;
+
+            if ( !string.IsNullOrEmpty(closedPanelName) )
+            {
+                CheckAllClosedInLayer(closedPanelName);
+            }
         }
 
         public bool Close(string panelName, bool forceDestroy = false)
@@ -210,6 +218,21 @@ namespace UuIiView
         public bool IsLayerClosedAll(params string[] layerNames)
         {
             return layerCount.Any(x=>layerNames.Contains(x.Key) && x.Value>0);
+        }
+
+        void CheckAllClosedInLayer(string closedPanel)
+        {
+            var info = uiPanelData.panels.FirstOrDefault(_ => _.name == closedPanel);
+            if (info == null)
+            {
+                return;
+            }
+
+            var layerName = layerType[info.layerTypeIdx];
+            if ( layerCount[layerName] == 0 )
+            {
+                OnAllClosed?.Invoke(layerName);
+            }
         }
 
         public bool IsTapLock => tapLock.activeSelf;

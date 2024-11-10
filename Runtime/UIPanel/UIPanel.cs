@@ -85,13 +85,13 @@ namespace UuIiView
             }
             else
             {
-                UILayer.Inst.SortPanel();
+                UILayer.Inst.SortPanel(gameObject.name);
             }
         }
 
         void OnDestroy()
         {
-            UILayer.Inst.SortPanel();
+            UILayer.Inst.SortPanel(gameObject.name);
         }
 
         public void Back()
