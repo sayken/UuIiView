@@ -36,7 +36,7 @@ namespace UuIiView
             ViewRoot.SetData(d);
             if (onEvent != null) ViewRoot.SetReceiver(onEvent);
 
-            UILayer.Inst.SortPanel();
+            UILayer.Inst.SortPanel(true, gameObject.name);
             transition = GetComponent<ITransition>();
             if (transition != null)
             {
@@ -85,13 +85,13 @@ namespace UuIiView
             }
             else
             {
-                UILayer.Inst.SortPanel(gameObject.name);
+                UILayer.Inst.SortPanel(false, gameObject.name);
             }
         }
 
         void OnDestroy()
         {
-            UILayer.Inst.SortPanel(gameObject.name);
+            UILayer.Inst.SortPanel(false, gameObject.name);
         }
 
         public void Back()

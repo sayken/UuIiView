@@ -26,6 +26,7 @@ namespace UuIiView
 
         /// <summary>　Panelを閉じたとき、所属レイヤーが全て閉じられたら呼ばれる </summary>
         public Action<string> OnAllClosed;
+        public Action<string> OnFirstOpened;
 
         public void Initialize(UIPanelData uiPanelData)
         {
@@ -108,16 +109,16 @@ namespace UuIiView
             return go;
         }
 
-        public void SortPanel(string closedPanelName = "")
+        public void SortPanel(bool isOpen, string panelName = "")
         {
             if (!reservedSort && gameObject.activeSelf )
             {
-                StartCoroutine(SortPanelInternal(closedPanelName));
+                StartCoroutine(SortPanelInternal(isOpen, panelName));
                 reservedSort = true;
             }
         }
 
-        IEnumerator SortPanelInternal(string closedPanelName)
+        IEnumerator SortPanelInternal(bool isOpen, string panelName)
         {
             yield return new WaitForEndOfFrame();
 
@@ -157,9 +158,9 @@ namespace UuIiView
 
             reservedSort = false;
 
-            if ( !string.IsNullOrEmpty(closedPanelName) )
+            if ( !string.IsNullOrEmpty(panelName) )
             {
-                CheckAllClosedInLayer(closedPanelName);
+                CheckLayer(isOpen, panelName);
             }
         }
 
@@ -220,7 +221,7 @@ namespace UuIiView
             return layerCount.Any(x=>layerNames.Contains(x.Key) && x.Value>0);
         }
 
-        void CheckAllClosedInLayer(string closedPanel)
+        void CheckLayer(bool isOpen, string closedPanel)
         {
             var info = uiPanelData.panels.FirstOrDefault(_ => _.name == closedPanel);
             if (info == null)
@@ -229,9 +230,13 @@ namespace UuIiView
             }
 
             var layerName = layerType[info.layerTypeIdx];
-            if ( layerCount[layerName] == 0 )
+            if ( !isOpen && layerCount[layerName] == 0 )
             {
                 OnAllClosed?.Invoke(layerName);
+            }
+            else if ( isOpen && layerCount[layerName] == 1 )
+            {
+                OnFirstOpened?.Invoke(layerName);
             }
         }
 
