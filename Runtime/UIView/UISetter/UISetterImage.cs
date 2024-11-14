@@ -70,6 +70,7 @@ namespace UuIiView
                 return;
             }
 
+            gameObject.SetActive(true);
             Sprite sp = null;
             switch (loadFrom)
             {
