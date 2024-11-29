@@ -197,6 +197,9 @@ namespace UuIiView
             }
 
             bind?.Invoke(dat);
+
+            updatedKeys.Clear();
+            updatedListKeys.Clear();
         }
 
         public void Clear()
