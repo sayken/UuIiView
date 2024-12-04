@@ -21,7 +21,8 @@ namespace UuIiView
         Toggle,
         Slider,
         List,
-        TMP_InputField
+        TMP_InputField,
+        CustomToggleGroup
     }
 
     public class UISetterSimple : UISetter
@@ -56,6 +57,8 @@ namespace UuIiView
                 t = UIType.List;
             else if (GetComponent<TMP_InputField>() != null)
                 t = UIType.TMP_InputField;
+            else if (GetComponent<CustomToggleGroup>() != null)
+                t = UIType.CustomToggleGroup;
             else
                 t = UIType.GameObject;
 
@@ -120,6 +123,12 @@ namespace UuIiView
                     break;
                 case UIType.TMP_InputField:
                     GetComponent<TMP_InputField>().text = obj.ToString();
+                    break;
+                case UIType.CustomToggleGroup:
+                    if ( int.TryParse(obj.ToString(), out int idx))
+                    {
+                        GetComponent<CustomToggleGroup>().SelectToggle(idx);
+                    }
                     break;
                 case UIType.GameObject:
                     gameObject.SetActive((bool)obj);
