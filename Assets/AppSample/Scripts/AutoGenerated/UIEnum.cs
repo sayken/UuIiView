@@ -5,5 +5,9 @@ public enum ePanelName
 
 public enum eEventName
 {
+	ShopButton,
+	ClosetButton,
+	QuestButton,
+	OtherButton,
 }
 

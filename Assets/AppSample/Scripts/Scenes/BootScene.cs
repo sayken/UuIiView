@@ -1,10 +1,7 @@
 using UnityEngine;
 using UuIiView;
-using UuIiView.Sample;
 using System;
 using UnityEngine.SceneManagement;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace UuIiView.Sample
 {
@@ -38,10 +35,7 @@ namespace UuIiView.Sample
             foreach ( string panelName in UILayer.Inst.GetPanelNames())
             {
                 // 専用PresenterのTypeを取得（ない場合はDefaultPresenterを使用）
-                // var type = Type.GetType(panelName + "Presenter");
-                // type ??= Type.GetType("DefaultPresenter");
-                var type = GetPresenterType(panelName);
-                Debug.Log("type = "+ type.ToString());
+                var type = Type.GetType(panelName + "Presenter") ?? Type.GetType("DefaultPresenter");
 
                 // Presenter登録
                 UILayer.Inst.Router.SetPresenter(panelName, type, model);
@@ -55,19 +49,6 @@ namespace UuIiView.Sample
 
             // === 準備完了したので、ゲーム画面開始
             SceneManager.LoadScene("OutGameScene");
-
-        }
-
-        Type GetPresenterType(string panelName)
-        {
-            Debug.Log("panelName = "+ panelName);
-            var type = Type.GetType(panelName + "Presenter");
-            if ( type == null )
-            {
-                // 専用PresenterがないPanelの時は、デフォルトのPresenterを使用
-                return Type.GetType("DefaultPresenter");
-            }
-            return type;
         }
     }
 }
