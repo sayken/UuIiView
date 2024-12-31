@@ -1,13 +1,16 @@
 public enum ePanelName
 {
 	Home,
+	Message,
+	Setting,
 }
 
 public enum eEventName
 {
 	ShopButton,
 	ClosetButton,
-	QuestButton,
-	OtherButton,
+	MessageButton,
+	SettingButton,
+	Switch,
 }
 
