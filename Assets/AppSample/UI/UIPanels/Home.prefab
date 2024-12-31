@@ -1524,15 +1524,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6284905709202467564, guid: 129b2d28ce9094459ae6cdf35a612b70,
+        type: 3}
+      propertyPath: actionType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6284905709202467564, guid: 129b2d28ce9094459ae6cdf35a612b70,
+        type: 3}
+      propertyPath: targetPanelName
+      value: TabSelect
+      objectReference: {fileID: 0}
     - target: {fileID: 6950072822357654311, guid: 129b2d28ce9094459ae6cdf35a612b70,
         type: 3}
       propertyPath: m_Name
-      value: ShopButton
+      value: TabSelectButton
       objectReference: {fileID: 0}
     - target: {fileID: 7001022266108781120, guid: 129b2d28ce9094459ae6cdf35a612b70,
         type: 3}
       propertyPath: m_text
-      value: SHOP
+      value: TAB
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

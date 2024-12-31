@@ -34,3 +34,9 @@ MonoBehaviour:
     layerTypeIdx: 2
     blindType: 2
     cache: 0
+  - name: TabSelect
+    prefab: {fileID: 7930583114291697686, guid: 03817ec47896f4a05be910672ad6a9e4,
+      type: 3}
+    layerTypeIdx: 2
+    blindType: 2
+    cache: 0

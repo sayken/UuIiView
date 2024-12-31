@@ -10,7 +10,7 @@ public class DefaultPresenter : ReactivePresenter
     
     protected override void GetInitData(CommandLink commandLink, Action<string> onCompleted)
     {
-        // onCompleted.Invoke("{}");
+        onCompleted.Invoke("{}");
         // UnityEngine.Debug.Log($"[{uiPanel.name}] DefaultPresenter");
     }
 
