@@ -31,9 +31,9 @@ namespace UuIiView
 
             if (setter.uiType == UIType.List)
             {
-                prop["uiPanelRoot"].objectReferenceValue = (UIPanel)EditorGUILayout.ObjectField("UI Panel Root", setter.rootUIViewRoot, typeof(UIPanel), true); ;
-                prop["cellPrefab"].objectReferenceValue = (UIViewRoot)EditorGUILayout.ObjectField("Cell Prefab", setter.cellPrefab, typeof(UIViewRoot), true);
-                prop["itemName"].stringValue = EditorGUILayout.TextField("Item Name", setter.itemName);
+                // prop["uiPanelRoot"].objectReferenceValue = (UIPanel)EditorGUILayout.ObjectField("UI Panel Root", setter.rootUIViewRoot, typeof(UIPanel), true); ;
+                // prop["cellPrefab"].objectReferenceValue = (UIViewRoot)EditorGUILayout.ObjectField("Cell Prefab", setter.cellPrefab, typeof(UIViewRoot), true);
+                // prop["itemName"].stringValue = EditorGUILayout.TextField("Item Name", setter.itemName);
             }
         
             serializedObject.ApplyModifiedProperties();
