@@ -45,13 +45,13 @@ namespace UuIiView
                 // 2つ以上のパラメータがある
                 var dict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(obj.ToString());
 
-                if (ColorUtility.TryParseHtmlString(dict["color"], out var color))
+                if (dict.TryGetValue("color", out var colorStr) && ColorUtility.TryParseHtmlString(colorStr, out var color))
                 {
                     Image.color = color;
                 }
-                if (dict.ContainsKey("path"))
+                if (dict.TryGetValue("path", out var pathValue))
                 {
-                    path = dict["path"];
+                    path = pathValue;
                 }
             }
             else

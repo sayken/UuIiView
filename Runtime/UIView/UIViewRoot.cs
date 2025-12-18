@@ -119,8 +119,18 @@ namespace UuIiView
             if (d.GetType() == typeof(string))
             {
                 //Log(d.ToString());
-                var dic = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(d.ToString());
-                UpdateDataByDic(dic);
+                try
+                {
+                    var dic = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(d.ToString());
+                    if (dic != null)
+                    {
+                        UpdateDataByDic(dic);
+                    }
+                }
+                catch (Newtonsoft.Json.JsonException e)
+                {
+                    Debug.LogError($"[UIViewRoot] {gameObject.name}: JSONのパースに失敗しました。\n{e.Message}");
+                }
             }
             else if ( d.GetType() == typeof(Dictionary<string,object>))
             {

@@ -53,13 +53,13 @@ namespace UuIiView
                 // 2つ以上のパラメータがある
                 var dict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(obj.ToString());
 
-                if (ColorUtility.TryParseHtmlString(dict["color"], out color))
+                if (dict.TryGetValue("color", out var colorStr) && ColorUtility.TryParseHtmlString(colorStr, out color))
                 {
                     textUI.color = color;
                 }
-                if (dict.ContainsKey("text"))
+                if (dict.TryGetValue("text", out var textValue))
                 {
-                    textStr = dict["text"];
+                    textStr = textValue;
                 }
             }
             else

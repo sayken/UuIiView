@@ -62,6 +62,8 @@ namespace UuIiView
 
         public override void Set(object obj)
         {
+            if (obj == null) return;
+
             switch (uiType)
             {
                 case UIType.Text:

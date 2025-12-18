@@ -15,15 +15,28 @@ namespace UuIiView
 
         public override void Set(object obj)
         {
-            var dataList = (IList)obj;
+            if (obj == null) return;
+
+            IList dataList;
+            if (obj is IList list)
+            {
+                dataList = list;
+            }
+            else
+            {
+                Debug.LogWarning($"[UISetterList] {gameObject.name}: objがIListではありません。Type={obj.GetType()}");
+                return;
+            }
+
             if (obj.GetType() == typeof(Newtonsoft.Json.Linq.JArray))
             {
-                dataList = new List<object>();
-                foreach (var o in (IList)obj)
+                var convertedList = new List<object>();
+                foreach (var o in dataList)
                 {
                     var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(o.ToString());
-                    dataList.Add(d);
+                    convertedList.Add(d);
                 }
+                dataList = convertedList;
             }
 
             uiViewRoot = GetComponentInParent<UIViewRoot>();
