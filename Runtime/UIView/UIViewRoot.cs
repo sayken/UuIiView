@@ -33,8 +33,8 @@ namespace UuIiView
 
     /// <summary>
     /// UuIiView のコア処理。
-    /// ・Json(or Dictioanry<string, object> or class)を受け取って、Childrensにアタッチされている UISetter に object を渡す
-    /// ・Childrens から上がってきた 各種Event を Reciever に渡す
+    /// ・Json(or Dictionary&lt;string, object&gt; or class)を受け取って、Childrensにアタッチされている UISetter に object を渡す
+    /// ・Childrens から上がってきた 各種Event を Receiver に渡す
     /// </summary>
     public class UIViewRoot : MonoBehaviour
     {

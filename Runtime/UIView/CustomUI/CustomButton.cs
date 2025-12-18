@@ -11,6 +11,7 @@ namespace UuIiView
     [RequireComponent(typeof(Animator))]
     public class CustomButton : UIEvent, IUICustom, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
+        private const float LongTapDuration = 1.5f;
         [SerializeField] public ActionType actionType;
         [HideInInspector] public bool interactable;
         [HideInInspector] public string targetPanelName = string.Empty;
@@ -90,7 +91,7 @@ namespace UuIiView
 
         [SerializeField] Image tapArea;
 
-        WaitForSeconds waitForLongTap = new WaitForSeconds(1.5f);
+        WaitForSeconds waitForLongTap = new WaitForSeconds(LongTapDuration);
 
         protected Action onClickEvent;
         protected Action onLongTapEvent;
