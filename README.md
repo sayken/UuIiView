@@ -1,66 +1,202 @@
 # UuIiView
-UuIiView（ウーイービュー）はUnity上でUIを開発する際、uGUIを使用したMVC(P)モデルでの開発におけるViewの部分の実装を汎用化させるためのモジュールです。  
 
-## 始め方
-PackageMangagerを使用します。  
-`https://github.com/sayken/UuIiView.git#upm`
+UuIiView（ウーイービュー）はUnity上でUIを開発する際、uGUIを使用したMVC(P)モデルでの開発におけるViewの部分の実装を汎用化させるためのモジュールです。
 
-## Viewの表示の更新とEventの受取
-![画像1](https://github.com/sayken/UuIiView/assets/6512883/60b36a6d-be44-45e8-866b-47d767974b81)
+## インストール
 
-UIの表示は、UIViewRoot.SetData() に json形式のstring を渡すことで更新されます。  
-(json以外にも、Dictionary<string,object>、classにも対応しています)  
-jsonの形式は  
-- GameObjectに値を渡す時は、通常の"key":"value"
-- GameObjectに複数の値を渡す時はクラス
-- リストに値を渡す時はクラスの配列
+Package Managerを使用します。
 
-を渡します。
 ```
-{  
-    "GameObject名(string型)" : "UISetterに渡す値(object型)",
-    "GameObject名(string型)" : 
-    {
-        "Id" : "このクラスを特定できる任意のユニークな文字列",
-        "GameObject名(string型)" : "UISetterに渡す値(object型)",
-        "GameObject名(string型)" : "UISetterに渡す値(object型)",
-    }
-    "GameObject名":[
+https://github.com/sayken/UuIiView.git#upm
+```
+
+## 主な機能
+
+- JSON / Dictionary / Class からUIへのデータバインディング
+- UIイベント（Button, Toggle, Slider等）の統一的なハンドリング
+- 画面遷移の管理
+
+## ディレクトリ構成
+
+```
+UuIiView/
+├── Runtime/
+│   ├── UIView/
+│   │   ├── UIViewRoot.cs       # コア処理（データバインディング・イベント受信）
+│   │   ├── UISetter/           # UI更新コンポーネント群
+│   │   │   ├── UISetter.cs           # 基底クラス
+│   │   │   ├── UISetterSimple.cs     # 汎用UI更新
+│   │   │   ├── UISetterText.cs       # テキスト表示（フォーマット対応）
+│   │   │   ├── UISetterImage.cs      # 画像表示
+│   │   │   ├── UISetterList.cs       # リスト表示（セル再利用）
+│   │   │   ├── UISetterDialog.cs     # ダイアログボタン生成
+│   │   │   ├── UISetterGauge.cs      # ゲージ表示
+│   │   │   └── UISetterAnimator.cs   # Animatorパラメータ制御
+│   │   └── CustomUI/           # カスタムUIコンポーネント群
+│   │       ├── CustomButton.cs       # 拡張ボタン（長押し対応）
+│   │       ├── CustomToggle.cs       # 拡張トグル
+│   │       ├── CustomToggleGroup.cs  # トグルグループ管理
+│   │       └── EventRelay.cs         # 標準UIイベント中継
+│   ├── Interface/              # インターフェース定義
+│   ├── Utils/                  # ユーティリティ
+│   └── ViewTest/               # テスト用
+└── Editor/                     # エディタ拡張
+```
+
+## 基本的な使い方
+
+### 1. データの設定
+
+`UIViewRoot.SetData()` にデータを渡すことでUIが更新されます。
+
+```csharp
+// JSON文字列
+uiViewRoot.SetData("{\"PlayerName\": \"太郎\", \"Score\": 100}");
+
+// Dictionary
+var data = new Dictionary<string, object>
+{
+    { "PlayerName", "太郎" },
+    { "Score", 100 }
+};
+uiViewRoot.SetData(data);
+
+// クラス（プロパティ名がGameObject名と一致）
+uiViewRoot.SetData(playerData);
+```
+
+### 2. イベントの受信
+
+`UIViewRoot.SetReceiver()` または `Init()` でイベントハンドラを設定します。
+
+```csharp
+uiViewRoot.Init(data, (commandLink) =>
+{
+    Debug.Log($"Event received: {commandLink}");
+    // commandLink形式: "PanelName/EventType/ActionType/EventName/ParentName/Id"
+});
+```
+
+## JSON形式
+
+```json
+{
+    "TextObject": "表示するテキスト",
+    "ImageObject": "Resources/path/to/sprite",
+    "ButtonObject": true,
+    "NestedObject": {
+        "Id": "unique-id-001",
+        "ChildText": "子要素のテキスト"
+    },
+    "ListObject": [
         {
-            "Id" : "このクラスを特定できる任意のユニークな文字列",
-            "GameObject名":"値",
-            "GameObject名":"値"
-        },{
-            "Id" : "このクラスを特定できる任意のユニークな文字列",
-            "GameObject名":"値",
-            "GameObject名":"値"
+            "Id": "item-001",
+            "ItemName": "アイテム1",
+            "ItemCount": 10
+        },
+        {
+            "Id": "item-002",
+            "ItemName": "アイテム2",
+            "ItemCount": 20
         }
     ]
 }
 ```
-クラスを渡す場合、GameObject名とは関係なく`Id`というキー（固定の文字列）を渡すと、下の項のEventの受取でIdが渡されるので、OnEventで呼び出し元を特定するのに使用できます。
 
-## Viewで発生するEventの受取
-UIで発生したEventは、UIViewRoot.SetReceiver() に Action<string> を渡すことで、Path形式でEventを受け取れます。  
-（Path形式はCommandLinkクラスに変換することで、各種情報を取り出しやすくなっています）  
-各種情報  
-- Id：Jsonで渡したId。リスト表示などで使用。
-- PanelName：UIPanel名
-- EventName：Eventを発生させたGameObject名（ButtonならButtonのGameObject名、ScrollRectならScrollRect名）
-- EventType：enum.EventTypeで設定されたもの( Button, Toggle, InputFieldValueChanged, InputFieldEndEdit, Open, Close, Slider など）
-- IsOn：基本は true。Toggleの場合のみ true or false
+### 特殊なキー
 
-各UIの要素には、UIViewRoot.SetData()経由でUISetterに渡されます。  
-実際にどのように表示させるかについては、UISetterの実装に記述します。  
-良く使いそうな基本的なものは既に実装済みですが、特殊なものは独自にUISetterを継承して実装します。  
+- `Id`: イベント発生時に呼び出し元を特定するためのユニークID
 
-## 画面間の遷移
-![画像2](https://github.com/sayken/UuIiView/assets/6512883/ccb7abbd-ec2a-430f-9594-0ead78a43c74)
+## UISetterの種類
 
-UI内でEventが発生すると、Presenterの上位にあるDispatherに通知されます。  
+| クラス | 用途 | 受け取る値 |
+|--------|------|-----------|
+| UISetterSimple | 汎用（Text, Image, Button等） | 型に応じて自動判定 |
+| UISetterText | テキスト表示 | string / JSON（color, text） |
+| UISetterImage | 画像表示 | string（パス）/ JSON（color, path） |
+| UISetterList | リスト表示 | IList |
+| UISetterDialog | ダイアログボタン | IList（IsPositive, Name, EventName） |
+| UISetterGauge | ゲージ/プログレスバー | double / float（0.0〜1.0） |
+| UISetterAnimator | Animatorパラメータ | Dictionary（パラメータ名: 値） |
+
+### UISetterSimpleの対応UIType
+
+| UIType | コンポーネント | 値の型 |
+|--------|---------------|--------|
+| Text | TextMeshProUGUI / Text | string |
+| Image | Image | string（Resourcesパス） |
+| RawImage | RawImage | string（URL）/ bool |
+| GameObject | - | bool（SetActive） |
+| CustomButton | CustomButton | bool（Interactable） |
+| CustomToggle | CustomToggle | bool（IsOn） |
+| Button | Button | bool（interactable） |
+| Toggle | Toggle | bool（isOn） |
+| Slider | Slider | float（value） |
+| TMP_InputField | TMP_InputField | string |
+| CustomToggleGroup | CustomToggleGroup | int（選択index） |
+
+## CustomUIコンポーネント
+
+### CustomButton
+
+Animator連携と長押し対応のボタン。
+
+```
+ActionType:
+- None: 何もしない
+- Open: パネルを開く
+- Close: パネルを閉じる
+- CloseAndOpen: 閉じて開く
+- Action: アクション実行
+- ActionToPanel: 特定パネルへアクション
+- CloseGroupAndOpen: グループを閉じて開く
+```
+
+### CustomToggle
+
+トグル機能を持つボタン。CustomToggleGroupと連携可能。
+
+### CustomToggleGroup
+
+複数のCustomToggleを管理。
+- `allowSwitchOff`: すべてOFFを許可
+- `allowMultiSelect`: 複数選択を許可
+- `allowMaxSelect`: 最大選択数
+
+## イベント形式
+
+イベントは以下のPath形式で通知されます：
+
+```
+PanelName/EventType/ActionType/EventName/ParentName/Id
+```
+
+### EventType
+
+| 値 | 説明 |
+|----|------|
+| Button | ボタンクリック |
+| Toggle | トグル変更 |
+| LongTap | 長押し |
+| Slider | スライダー変更 |
+| Input | 入力フィールド変更 |
+
+## 画面遷移
+
+![画面遷移図](https://github.com/sayken/UuIiView/assets/6512883/ccb7abbd-ec2a-430f-9594-0ead78a43c74)
+
+UI内でEventが発生すると、Presenterの上位にあるDispatcherに通知されます。
 Routerは渡されたCommandLinkから、処理対象のPresenterを判定しOnEventを呼び出します。
 
-## UIPanelSettings
-![画像3](https://github.com/sayken/UuIiView/assets/6512883/52c6e7dc-219d-4d0e-b464-be30a09fe82b)
+## 動作環境
 
-まだ編集中 
+- Unity 2021.3 以上
+- 依存: Newtonsoft.Json, TextMeshPro
+
+## ライセンス
+
+LICENSE.md を参照してください。
+
+## 作者
+
+sayken (sayken2000@gmail.com)
