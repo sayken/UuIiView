@@ -8,7 +8,6 @@ namespace UuIiView
         public CustomToggleGroup toggleGroup;
         [HideInInspector] public bool isOn;
 
-        UIViewRoot viewRoot;
         public bool IsOn
         {
             get
@@ -22,19 +21,22 @@ namespace UuIiView
                 OnSelected();
             }
         }
-        void Awake()
+
+        protected override void Awake()
         {
-            viewRoot = GetComponent<UIViewRoot>();
-            if (viewRoot == null)
-            {
-                viewRoot = gameObject.GetComponentInParent<UIViewRoot>();
-            }
-
             toggleGroup = gameObject.GetComponentInParent<CustomToggleGroup>();
-
             if (toggleGroup != null)
             {
                 toggleGroup.customToggles.Add(this);
+            }
+
+            base.Awake();
+        }
+
+        protected override void InitializeClickEvent()
+        {
+            if (toggleGroup != null)
+            {
                 onClickEvent = () =>
                 {
                     toggleGroup.On(this, !IsOn);
@@ -49,12 +51,11 @@ namespace UuIiView
                     viewRoot.ReceiveEvent(gameObject.name, EventType.Toggle, actionType, parentName, IsOn);
                 };
             }
-            onLongTapEvent = () => { };
+        }
 
-            if (Anim != null)
-            {
-                containsParam = Anim.parameters.Select(_ => _.name).ToList();
-            }
+        protected override void InitializeLongTapEvent()
+        {
+            onLongTapEvent = () => { };
         }
 
         public void TriggerEvent()

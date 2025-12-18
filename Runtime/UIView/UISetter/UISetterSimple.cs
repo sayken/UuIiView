@@ -39,9 +39,9 @@ namespace UuIiView
             UIType t = UIType.None;
             if (GetComponent<TextMeshProUGUI>() != null)
                 t = UIType.Text;
-            else if (GetComponent<Image>() != null)
-                t = UIType.Image;
             else if (GetComponent<RawImage>() != null)
+                t = UIType.RawImage;
+            else if (GetComponent<Image>() != null)
                 t = UIType.Image;
             else if (GetComponent<CustomButton>() != null)
                 t = UIType.CustomButton;

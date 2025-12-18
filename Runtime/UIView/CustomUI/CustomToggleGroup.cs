@@ -31,21 +31,27 @@ namespace UuIiView
                 // 現在選択されていないトグルを選択
                 if (!allowMultiSelect)
                 {
-                    foreach ( var tgl in customToggles)
+                    foreach (var tgl in customToggles)
                     {
-                        tgl.IsOn = (tgl==toggle);
-                        tgl.TriggerEvent();
+                        bool newState = (tgl == toggle);
+                        // 状態が変わるトグルのみイベントを発火
+                        if (tgl.IsOn != newState)
+                        {
+                            tgl.IsOn = newState;
+                            tgl.TriggerEvent();
+                        }
                     }
-
                 }
                 else if (allowMaxSelect > onCount)
                 {
                     toggle.IsOn = true;
+                    toggle.TriggerEvent();
                 }
             }
             else if (isOn == false && (onCount > 1 || allowSwitchOff))
             {
                 toggle.IsOn = false;
+                toggle.TriggerEvent();
             }
         }
 

@@ -153,11 +153,13 @@ namespace UuIiView
         {
             data = dic;
             uiSetters ??= gameObject.GetComponentsInChildren<UISetter>(true).ToList();
-            
+
             foreach (UISetter u in uiSetters)
             {
-                if (!dic.ContainsKey(u.gameObject.name)) continue;
-                SetObj(u, dic[u.gameObject.name]);
+                if (dic.TryGetValue(u.gameObject.name, out var value))
+                {
+                    SetObj(u, value);
+                }
             }
         }
 

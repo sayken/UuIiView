@@ -113,15 +113,31 @@ namespace UuIiView
         bool isLongTap = false;
 
         protected List<string> containsParam = new List<string>();
+        protected UIViewRoot viewRoot;
 
-        void Awake()
+        protected virtual void Awake()
         {
-            var viewRoot = GetComponent<UIViewRoot>();
+            viewRoot = GetComponent<UIViewRoot>();
             if (viewRoot == null)
             {
                 viewRoot = gameObject.GetComponentInParent<UIViewRoot>();
             }
 
+            InitializeAnimParams();
+            InitializeClickEvent();
+            InitializeLongTapEvent();
+        }
+
+        protected void InitializeAnimParams()
+        {
+            if (Anim != null)
+            {
+                containsParam = Anim.parameters.Select(_ => _.name).ToList();
+            }
+        }
+
+        protected virtual void InitializeClickEvent()
+        {
             onClickEvent = () =>
             {
                 if ((actionType == ActionType.Open || actionType == ActionType.CloseAndOpen || actionType == ActionType.CloseGroupAndOpen) && !string.IsNullOrEmpty(targetPanelName))
@@ -146,12 +162,11 @@ namespace UuIiView
                     viewRoot.ReceiveEvent(gameObject.name, EventType.Button, actionType, parentName);
                 }
             };
-            onLongTapEvent = () => viewRoot.ReceiveEvent(gameObject.name, EventType.LongTap, actionType, parentName);
+        }
 
-            if (Anim != null )
-            {
-                containsParam = Anim.parameters.Select(_ => _.name).ToList();
-            }
+        protected virtual void InitializeLongTapEvent()
+        {
+            onLongTapEvent = () => viewRoot.ReceiveEvent(gameObject.name, EventType.LongTap, actionType, parentName);
         }
         void OnEnable()
         {

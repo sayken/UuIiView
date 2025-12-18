@@ -1,27 +1,30 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UuIiView;
 
-public class UISetterGauge : UISetter
+namespace UuIiView
 {
-    Image image;
-    Image Image
+    public class UISetterGauge : UISetter
     {
-        get
+        Image image;
+        Image Image
         {
-            image = image ?? GetComponent<Image>();
-            return image;
-        }
-    }
-    public override void Set(object obj)
-    {
-        if ( obj.GetType() != typeof(double) )
-        {
-            Debug.Log("obj type is not double : "+ obj.GetType());
-            return;
+            get
+            {
+                image = image ?? GetComponent<Image>();
+                return image;
+            }
         }
 
-        double value = (double)obj;
-        Image.fillAmount = (float)value;
+        public override void Set(object obj)
+        {
+            if ( obj.GetType() != typeof(double) )
+            {
+                Debug.Log("obj type is not double : "+ obj.GetType());
+                return;
+            }
+
+            double value = (double)obj;
+            Image.fillAmount = (float)value;
+        }
     }
 }
