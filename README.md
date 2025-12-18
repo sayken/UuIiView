@@ -14,7 +14,6 @@ https://github.com/sayken/UuIiView.git#upm
 
 - JSON / Dictionary / Class からUIへのデータバインディング
 - UIイベント（Button, Toggle, Slider等）の統一的なハンドリング
-- 画面遷移の管理
 
 ## ディレクトリ構成
 
@@ -180,13 +179,6 @@ PanelName/EventType/ActionType/EventName/ParentName/Id
 | LongTap | 長押し |
 | Slider | スライダー変更 |
 | Input | 入力フィールド変更 |
-
-## 画面遷移
-
-![画面遷移図](https://github.com/sayken/UuIiView/assets/6512883/ccb7abbd-ec2a-430f-9594-0ead78a43c74)
-
-UI内でEventが発生すると、Presenterの上位にあるDispatcherに通知されます。
-Routerは渡されたCommandLinkから、処理対象のPresenterを判定しOnEventを呼び出します。
 
 ## 動作環境
 
