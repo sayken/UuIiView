@@ -163,19 +163,18 @@ namespace UuIiView
 
         void SetObj(UISetter uiSetter, object obj)
         {
+            if (uiSetter == null) return;
+
             try
             {
-                if (uiSetter != null)
-                {
-                    uiSetter.SetObj(obj);
-                }
+                uiSetter.SetObj(obj);
 
                 if (uiSetter.transform == gameObject.transform) return;
                 uiSetter.GetComponent<UIViewRoot>()?.InitInternal(RootUIViewRoot, obj, OnEvent);
             }
             catch(Exception e)
             {
-                Debug.LogError("e = " + e.ToString() +"\nobj = "+ obj.ToString());
+                Debug.LogError("e = " + e.ToString() +"\nobj = "+ obj?.ToString());
             }
         }
 

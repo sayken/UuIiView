@@ -101,16 +101,28 @@ namespace UuIiView
                     }
                     break;
                 case UIType.CustomButton:
-                    GetComponent<CustomButton>().Interactable = (bool)obj;
+                    if (TryParseBool(obj, out bool customButtonVal))
+                    {
+                        GetComponent<CustomButton>().Interactable = customButtonVal;
+                    }
                     break;
                 case UIType.CustomToggle:
-                    GetComponent<CustomToggle>().IsOn = (bool)obj;
+                    if (TryParseBool(obj, out bool customToggleVal))
+                    {
+                        GetComponent<CustomToggle>().IsOn = customToggleVal;
+                    }
                     break;
                 case UIType.Button:
-                    GetComponent<Button>().interactable = (bool)obj;
+                    if (TryParseBool(obj, out bool buttonVal))
+                    {
+                        GetComponent<Button>().interactable = buttonVal;
+                    }
                     break;
                 case UIType.Toggle:
-                    GetComponent<Toggle>().SetIsOnWithoutNotify((bool)obj);
+                    if (TryParseBool(obj, out bool toggleVal))
+                    {
+                        GetComponent<Toggle>().SetIsOnWithoutNotify(toggleVal);
+                    }
                     break;
                 case UIType.Slider:
                     if (float.TryParse(obj.ToString(), out float f))
@@ -131,27 +143,52 @@ namespace UuIiView
                     }
                     break;
                 case UIType.GameObject:
-                    gameObject.SetActive((bool)obj);
+                    if (TryParseBool(obj, out bool goVal))
+                    {
+                        gameObject.SetActive(goVal);
+                    }
                     break;
             }
+        }
+
+        /// <summary>
+        /// objectをbool型に安全に変換する
+        /// </summary>
+        bool TryParseBool(object obj, out bool result)
+        {
+            result = false;
+            if (obj == null) return false;
+
+            if (obj is bool b)
+            {
+                result = b;
+                return true;
+            }
+
+            return bool.TryParse(obj.ToString(), out result);
         }
 
         // ===== For RawImage =============================================================================================
         IEnumerator SetTexture(string uri)
         {
-            UnityWebRequest www = UnityWebRequestTexture.GetTexture(uri);
-
-            //画像を取得できるまで待つ
-            yield return www.SendWebRequest();
-
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(uri))
             {
-                Debug.LogError(www.error);
-            }
-            else
-            {
-                //取得した画像のテクスチャをRawImageのテクスチャに張り付ける
-                GetComponent<RawImage>().texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+                //画像を取得できるまで待つ
+                yield return www.SendWebRequest();
+
+                if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+                {
+                    Debug.LogError(www.error);
+                }
+                else
+                {
+                    //取得した画像のテクスチャをRawImageのテクスチャに張り付ける
+                    var rawImage = GetComponent<RawImage>();
+                    if (rawImage != null)
+                    {
+                        rawImage.texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+                    }
+                }
             }
         }
 

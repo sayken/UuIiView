@@ -9,8 +9,28 @@ namespace UuIiView
     {
         public override void Set(object obj)
         {
+            if (obj == null) return;
+
             var animator = GetComponent<Animator>();
-            var paramDic = (Dictionary<string,object>)obj;
+
+            // Dictionary型への安全な変換
+            Dictionary<string, object> paramDic;
+            if (obj is Dictionary<string, object> dic)
+            {
+                paramDic = dic;
+            }
+            else if (obj.ToString().StartsWith("{"))
+            {
+                // JSON文字列からDictionaryに変換
+                paramDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(obj.ToString());
+            }
+            else
+            {
+                Debug.LogError($"[UISetterAnimator] Unsupported type: {obj.GetType()}. Expected Dictionary<string, object> or JSON string.");
+                return;
+            }
+
+            if (paramDic == null) return;
 
             foreach (var p in animator.parameters)
             {
