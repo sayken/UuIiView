@@ -10,12 +10,7 @@ namespace UuIiView
         /// </summary>
         private void OnEnable()
         {
-            Add(
-                nameof(UISetterSimple.uiType),
-                nameof(UISetterSimple.rootUIViewRoot),
-                nameof(UISetterSimple.cellPrefab),
-                nameof(UISetterSimple.itemName)
-            );
+            Add(nameof(UISetterSimple.uiType));
         }
 
         /// <summary>
@@ -29,13 +24,6 @@ namespace UuIiView
 
             prop["uiType"].enumValueIndex = (int)(UIType)EditorGUILayout.EnumPopup("UI Type", setter.uiType);
 
-            if (setter.uiType == UIType.List)
-            {
-                // prop["uiPanelRoot"].objectReferenceValue = (UIPanel)EditorGUILayout.ObjectField("UI Panel Root", setter.rootUIViewRoot, typeof(UIPanel), true); ;
-                // prop["cellPrefab"].objectReferenceValue = (UIViewRoot)EditorGUILayout.ObjectField("Cell Prefab", setter.cellPrefab, typeof(UIViewRoot), true);
-                // prop["itemName"].stringValue = EditorGUILayout.TextField("Item Name", setter.itemName);
-            }
-        
             serializedObject.ApplyModifiedProperties();
         }
     }

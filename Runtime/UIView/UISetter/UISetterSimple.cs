@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-using Newtonsoft.Json;
 
 namespace UuIiView
 {
@@ -20,7 +18,6 @@ namespace UuIiView
         Button,
         Toggle,
         Slider,
-        List,
         TMP_InputField,
         CustomToggleGroup
     }
@@ -53,8 +50,6 @@ namespace UuIiView
                 t = UIType.Toggle;
             else if (GetComponent<Slider>() != null)
                 t = UIType.Slider;
-            else if (GetComponent<ScrollRect>() != null)
-                t = UIType.List;
             else if (GetComponent<TMP_InputField>() != null)
                 t = UIType.TMP_InputField;
             else if (GetComponent<CustomToggleGroup>() != null)
@@ -130,9 +125,6 @@ namespace UuIiView
                         GetComponent<Slider>().value = f;
                     }
                     break;
-                case UIType.List:
-                    SetList(obj);
-                    break;
                 case UIType.TMP_InputField:
                     GetComponent<TMP_InputField>().text = obj.ToString();
                     break;
@@ -189,52 +181,6 @@ namespace UuIiView
                         rawImage.texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
                     }
                 }
-            }
-        }
-
-        // ===== For List =================================================================================================
-        public UIViewRoot rootUIViewRoot;
-        public UIViewRoot cellPrefab;
-        public string itemName;
-
-        List<UIViewRoot> itemCells = new List<UIViewRoot>();
-
-        void SetList(object obj)
-        {
-            var dataList = (IList)obj;
-            if (obj.GetType() == typeof(Newtonsoft.Json.Linq.JArray))
-            {
-                dataList = new List<object>();
-                foreach (var o in (IList)obj)
-                {
-                    var d = JsonConvert.DeserializeObject<Dictionary<string, object>>(o.ToString());
-                    dataList.Add(d);
-                }
-            }
-
-            var listRoot = GetComponent<ScrollRect>().content;
-
-            for ( int i=0 ; i<dataList.Count ; i++)
-            {
-                if ( itemCells.Count > i )
-                {
-                    // 既にitemCellsにデータがあるので流用
-                    itemCells[i].Init(rootUIViewRoot, dataList[i]);
-                }
-                else
-                {
-                    // itemCellsにデータが無い（or 足りない）ので追加
-                    var vm = Instantiate(cellPrefab, listRoot);
-                    if (!string.IsNullOrWhiteSpace(itemName)) vm.gameObject.name = itemName;
-                    vm.Init(rootUIViewRoot, dataList[i]);
-                    itemCells.Add(vm);
-                }
-            }
-
-            // 必要なitemCellだけ表示状態にする
-            for ( int i=0; i<itemCells.Count; i++)
-            {
-                itemCells[i].gameObject.SetActive(dataList.Count > i);
             }
         }
     }

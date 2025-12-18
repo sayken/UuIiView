@@ -25,8 +25,8 @@ namespace UuIiView
             {UIType.Button,"true"},
             {UIType.Toggle,"true"},
             {UIType.Slider,"0f"},
-            {UIType.List,"[]"}
-
+            {UIType.TMP_InputField,"\"input_text\""},
+            {UIType.CustomToggleGroup,"0"}
         };
 
         string indent = "";
