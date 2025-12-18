@@ -43,15 +43,24 @@ namespace UuIiView
             else if (obj.ToString().StartsWith("{"))
             {
                 // 2つ以上のパラメータがある
-                var dict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(obj.ToString());
+                try
+                {
+                    var dict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(obj.ToString());
+                    if (dict == null) return;
 
-                if (dict.TryGetValue("color", out var colorStr) && ColorUtility.TryParseHtmlString(colorStr, out var color))
-                {
-                    Image.color = color;
+                    if (dict.TryGetValue("color", out var colorStr) && ColorUtility.TryParseHtmlString(colorStr, out var color))
+                    {
+                        Image.color = color;
+                    }
+                    if (dict.TryGetValue("path", out var pathValue))
+                    {
+                        path = pathValue;
+                    }
                 }
-                if (dict.TryGetValue("path", out var pathValue))
+                catch (Newtonsoft.Json.JsonException e)
                 {
-                    path = pathValue;
+                    Debug.LogError($"[UISetterImage] {gameObject.name}: JSONのパースに失敗しました。\n{e.Message}");
+                    return;
                 }
             }
             else

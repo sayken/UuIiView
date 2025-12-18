@@ -17,14 +17,27 @@ namespace UuIiView
 
         public override void Set(object obj)
         {
-            if ( obj.GetType() != typeof(double) )
+            if (obj == null)
             {
-                Debug.Log("obj type is not double : "+ obj.GetType());
                 return;
             }
 
-            double value = (double)obj;
-            Image.fillAmount = (float)value;
+            if (obj is double value)
+            {
+                Image.fillAmount = (float)value;
+            }
+            else if (obj is float floatValue)
+            {
+                Image.fillAmount = floatValue;
+            }
+            else if (double.TryParse(obj.ToString(), out double parsedValue))
+            {
+                Image.fillAmount = (float)parsedValue;
+            }
+            else
+            {
+                Debug.LogWarning($"[UISetterGauge] {gameObject.name}: objをdoubleに変換できません。Type={obj.GetType()}");
+            }
         }
     }
 }

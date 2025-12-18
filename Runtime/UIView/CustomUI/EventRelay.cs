@@ -24,6 +24,12 @@ namespace UuIiView
                 viewRoot = gameObject.GetComponentInParent<UIViewRoot>();
             }
 
+            if (viewRoot == null)
+            {
+                Debug.LogError($"[EventRelay] {gameObject.name}: UIViewRootが見つかりません。");
+                return;
+            }
+
             var component = GetComponent<Selectable>();
             if ( component.GetType() == typeof(TMPro.TMP_InputField) )
             {

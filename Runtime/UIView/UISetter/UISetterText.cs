@@ -43,6 +43,8 @@ namespace UuIiView
 
         public override void Set(object obj)
         {
+            if (obj == null) return;
+
             if (textUI == null) textUI = GetComponent<TextMeshProUGUI>();
 
             string textStr = string.Empty;
@@ -51,15 +53,24 @@ namespace UuIiView
             if ( obj.ToString().StartsWith("{") )
             {
                 // 2つ以上のパラメータがある
-                var dict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(obj.ToString());
+                try
+                {
+                    var dict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(obj.ToString());
+                    if (dict == null) return;
 
-                if (dict.TryGetValue("color", out var colorStr) && ColorUtility.TryParseHtmlString(colorStr, out color))
-                {
-                    textUI.color = color;
+                    if (dict.TryGetValue("color", out var colorStr) && ColorUtility.TryParseHtmlString(colorStr, out color))
+                    {
+                        textUI.color = color;
+                    }
+                    if (dict.TryGetValue("text", out var textValue))
+                    {
+                        textStr = textValue;
+                    }
                 }
-                if (dict.TryGetValue("text", out var textValue))
+                catch (Newtonsoft.Json.JsonException e)
                 {
-                    textStr = textValue;
+                    Debug.LogError($"[UISetterText] {gameObject.name}: JSONのパースに失敗しました。\n{e.Message}");
+                    return;
                 }
             }
             else

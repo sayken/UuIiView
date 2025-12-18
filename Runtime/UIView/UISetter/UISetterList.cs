@@ -40,6 +40,11 @@ namespace UuIiView
             }
 
             uiViewRoot = GetComponentInParent<UIViewRoot>();
+            if (uiViewRoot == null)
+            {
+                Debug.LogError($"[UISetterList] {gameObject.name}: UIViewRootが見つかりません。");
+                return;
+            }
 
             for (int i = itemCells.Count; i < dataList.Count; i++)
             {

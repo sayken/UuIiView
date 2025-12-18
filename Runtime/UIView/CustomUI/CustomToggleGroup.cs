@@ -57,6 +57,12 @@ namespace UuIiView
 
         public void SelectToggle(int idx = 0)
         {
+            if (customToggles.Count == 0)
+            {
+                Debug.LogWarning($"[CustomToggleGroup] {gameObject.name}: customTogglesが空です。");
+                return;
+            }
+
             if ( idx < 0 || customToggles.Count <= idx )
             {
                 idx = 0;

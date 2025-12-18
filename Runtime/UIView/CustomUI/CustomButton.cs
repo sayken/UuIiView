@@ -189,7 +189,7 @@ namespace UuIiView
         {
             if (Interactable == false) return;
             OnReleased();
-            StopCoroutine(longtap);
+            if (longtap != null) StopCoroutine(longtap);
         }
         public void OnPointerExit(PointerEventData eventData)
         {
