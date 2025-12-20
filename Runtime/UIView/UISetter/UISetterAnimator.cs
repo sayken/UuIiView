@@ -4,32 +4,30 @@ using UnityEngine;
 
 namespace UuIiView
 {
+    /// <summary>
+    /// Animatorパラメータを設定するためのUISetter
+    /// Dictionary/JSON形式でBool/Float/Intパラメータを一括設定可能
+    /// </summary>
     [RequireComponent(typeof(Animator))]
     public class UISetterAnimator : UISetter
     {
+        /// <summary>
+        /// Animatorパラメータを設定する
+        /// </summary>
+        /// <param name="obj">Dictionary&lt;string, object&gt;またはJSON文字列</param>
         public override void Set(object obj)
         {
             if (obj == null) return;
 
             var animator = GetComponent<Animator>();
-
-            // Dictionary型への安全な変換
-            Dictionary<string, object> paramDic;
-            if (obj is Dictionary<string, object> dic)
+            if (animator == null)
             {
-                paramDic = dic;
-            }
-            else if (obj.ToString().StartsWith("{"))
-            {
-                // JSON文字列からDictionaryに変換
-                paramDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(obj.ToString());
-            }
-            else
-            {
-                Debug.LogError($"[UISetterAnimator] Unsupported type: {obj.GetType()}. Expected Dictionary<string, object> or JSON string.");
+                Debug.LogError($"[UISetterAnimator] {gameObject.name}: Animatorコンポーネントが見つかりません。");
                 return;
             }
 
+            // Dictionary型への安全な変換
+            Dictionary<string, object> paramDic = ParseToDictionary(obj);
             if (paramDic == null) return;
 
             foreach (var p in animator.parameters)
@@ -46,7 +44,7 @@ namespace UuIiView
                                 }
                                 else
                                 {
-                                    Debug.LogError("Cannot parse to bool : " + paramDic[p.name]);
+                                    Debug.LogError($"[UISetterAnimator] {gameObject.name}: boolに変換できません: {paramDic[p.name]}");
                                 }
                             }
                             break;
@@ -58,7 +56,7 @@ namespace UuIiView
                                 }
                                 else
                                 {
-                                    Debug.LogError("Cannot parse to float : " + paramDic[p.name]);
+                                    Debug.LogError($"[UISetterAnimator] {gameObject.name}: floatに変換できません: {paramDic[p.name]}");
                                 }
                             }
                             break;
@@ -70,13 +68,42 @@ namespace UuIiView
                                 }
                                 else
                                 {
-                                    Debug.LogError("Cannot parse to int : " + paramDic[p.name]);
+                                    Debug.LogError($"[UISetterAnimator] {gameObject.name}: intに変換できません: {paramDic[p.name]}");
                                 }
                             }
                             break;
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// オブジェクトをDictionaryに変換する
+        /// </summary>
+        /// <param name="obj">変換元オブジェクト</param>
+        /// <returns>変換されたDictionary（失敗時はnull）</returns>
+        private Dictionary<string, object> ParseToDictionary(object obj)
+        {
+            if (obj is Dictionary<string, object> dic)
+            {
+                return dic;
+            }
+
+            if (obj.ToString().StartsWith("{"))
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(obj.ToString());
+                }
+                catch (JsonException e)
+                {
+                    Debug.LogError($"[UISetterAnimator] {gameObject.name}: JSONパースエラー: {e.Message}");
+                    return null;
+                }
+            }
+
+            Debug.LogError($"[UISetterAnimator] {gameObject.name}: サポートされていない型です: {obj.GetType()}。Dictionary<string, object>またはJSON文字列が必要です。");
+            return null;
         }
     }
 }

@@ -6,11 +6,26 @@ using TMPro;
 
 namespace UuIiView
 {
+    /// <summary>
+    /// ダイアログボタンを動的に生成するUISetter
+    /// ポジティブ/ネガティブボタンをデータに基づいて生成する
+    /// </summary>
     public class UISetterDialog : UISetter
     {
-        [SerializeField] GameObject positiveButtonPrefab;
-        [SerializeField] GameObject negativeButtonPrefab;
+        /// <summary>ポジティブボタン用プレハブ</summary>
+        [SerializeField]
+        [Tooltip("OKや確認などのポジティブアクション用ボタンプレハブ")]
+        private GameObject positiveButtonPrefab;
 
+        /// <summary>ネガティブボタン用プレハブ</summary>
+        [SerializeField]
+        [Tooltip("キャンセルや閉じるなどのネガティブアクション用ボタンプレハブ")]
+        private GameObject negativeButtonPrefab;
+
+        /// <summary>
+        /// ダイアログボタンを生成する
+        /// </summary>
+        /// <param name="obj">ボタン定義のIList（各要素はIsPositive/EventName/Name/TargetParentNameを持つ）</param>
         public override void Set(object obj)
         {
             if (obj == null) return;
@@ -21,26 +36,21 @@ namespace UuIiView
                 return;
             }
 
-            foreach ( var data in datas )
+            foreach (var data in datas)
             {
-                var dic = JsonConvert.DeserializeObject<Dictionary<string,object>>(data.ToString());
+                var dic = ParseToDictionary(data);
                 if (dic == null) continue;
 
                 // IsPositiveの安全な取得
-                bool isPositive = false;
-                if (dic.TryGetValue("IsPositive", out var isPositiveObj))
-                {
-                    if (isPositiveObj is bool b)
-                    {
-                        isPositive = b;
-                    }
-                    else
-                    {
-                        bool.TryParse(isPositiveObj?.ToString(), out isPositive);
-                    }
-                }
+                bool isPositive = GetBoolValue(dic, "IsPositive");
 
                 var prefab = isPositive ? positiveButtonPrefab : negativeButtonPrefab;
+                if (prefab == null)
+                {
+                    Debug.LogError($"[UISetterDialog] {gameObject.name}: {(isPositive ? "positiveButtonPrefab" : "negativeButtonPrefab")}が設定されていません。");
+                    continue;
+                }
+
                 var go = Instantiate(prefab, transform);
 
                 // EventNameの安全な取得
@@ -70,6 +80,40 @@ namespace UuIiView
                     customButton.actionType = ActionType.Action;
                 }
             }
+        }
+
+        /// <summary>
+        /// オブジェクトをDictionaryに変換する
+        /// </summary>
+        /// <param name="data">変換元オブジェクト</param>
+        /// <returns>変換されたDictionary（失敗時はnull）</returns>
+        private Dictionary<string, object> ParseToDictionary(object data)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<Dictionary<string, object>>(data.ToString());
+            }
+            catch (JsonException e)
+            {
+                Debug.LogError($"[UISetterDialog] {gameObject.name}: JSONパースエラー: {e.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// DictionaryからBool値を安全に取得する
+        /// </summary>
+        /// <param name="dic">取得元Dictionary</param>
+        /// <param name="key">キー名</param>
+        /// <returns>取得したbool値（取得失敗時はfalse）</returns>
+        private bool GetBoolValue(Dictionary<string, object> dic, string key)
+        {
+            if (!dic.TryGetValue(key, out var value)) return false;
+
+            if (value is bool b) return b;
+
+            bool.TryParse(value?.ToString(), out bool result);
+            return result;
         }
     }
 }
