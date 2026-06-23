@@ -13,13 +13,24 @@ namespace UuIiView
         static UIHierarchyCustom()
         {
             icon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.sayken.uuiiview/Editor/Icons/icon2.png");
+#if UNITY_6000_5_OR_NEWER
+            EditorApplication.hierarchyWindowItemByEntityIdOnGUI += OnGUI;
+#else
             EditorApplication.hierarchyWindowItemOnGUI += OnGUI;
+#endif
         }
 
+#if UNITY_6000_5_OR_NEWER
+        private static void OnGUI(EntityId entityID, Rect rect)
+        {
+            bool line = false;
+            GameObject go = EditorUtility.EntityIdToObject(entityID) as GameObject;
+#else
         private static void OnGUI(int instanceID, Rect rect)
         {
             bool line = false;
             GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+#endif
             if (go != null)
             {
                 var ts = go.GetComponent<UISetter>();
